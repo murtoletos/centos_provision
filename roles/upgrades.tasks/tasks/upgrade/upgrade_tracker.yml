@@ -24,7 +24,7 @@
   shell: >
     curl -fsSL {{ keitaro_url }}/releases/{{ get_latest_tracker_version.stdout }}/package8.zip > package.zip && \
       unzip -qo package.zip && \
-      mv www/* ./ && \
+      rsync -a www/ ./ && \
       rm package.zip && rm -rf www
   args:
     chdir: "{{ keitaro_root }}"
