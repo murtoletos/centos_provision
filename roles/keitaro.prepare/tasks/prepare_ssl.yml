@@ -1,7 +1,7 @@
-- name: Install certbot
+- name: remove old Certbot package
   package:
     name: certbot
-    state: installed
+    state: absent
   when: rhel_version == 7
   
 - name: remove old Certbot package
@@ -14,7 +14,6 @@
   file:
     path: "{{ certbot_dir }}/certbot"
     state: absent
-  when: rhel_version == 8  
   
 - name: download certbot-auto
   get_url:
@@ -23,7 +22,6 @@
     mode: '0755'
     owner: "root"
     force: yes
-  when: rhel_version == 8
   
 - name: install certbot-auto
   shell: cd {{ certbot_dir }} && ./certbot --install-only --non-interactive
