@@ -10,6 +10,11 @@
     state: absent  
   when: rhel_version == 8
   
+- name: remove old files
+  file:
+    path: "{{ certbot_dir }}"
+    state: absent
+
 - name: Creates certbot-auto directory
   file:
     path: "{{ certbot_dir }}"
