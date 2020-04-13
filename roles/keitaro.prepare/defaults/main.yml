@@ -4,4 +4,4 @@ kernel_sysctl_tweaks:
   fs.file-max: '{{ max_opened_files }}'
 
 certbot_url: https://dl.eff.org/certbot-auto
-certbot_dir: /usr/bin/certbot-auto
+certbot_dir: /usr/bin/certbot

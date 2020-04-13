@@ -29,6 +29,9 @@
     force: yes
   when: rhel_version == 8
   
+- name: install certbot-auto
+  shell: mv {{ certbot_dir }} && ./certbot-auto --install-only --non-interactive
+  
 - name: Set Certbot script variable.
   set_fact:
     certbot_script: "{{ certbot_dir }}/certbot-auto"
