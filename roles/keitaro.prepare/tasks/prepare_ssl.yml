@@ -21,6 +21,7 @@
     dest: "{{ certbot_dir }}/certbot-auto"
     mode: '0755'
     owner: "root"
+    force: true
   when: rhel_version == 8
   
 - name: Set Certbot script variable.
