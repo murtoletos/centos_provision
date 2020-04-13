@@ -10,6 +10,11 @@
     state: absent  
   when: rhel_version == 8
   
+- name: Creates certbot-auto directory
+  file:
+    path: "{{ certbot_dir }}"
+    state: directory  
+  
 - name: download certbot-auto
   get_url:
     url: "{{ certbot_url }}"
