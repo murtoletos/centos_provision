@@ -12,7 +12,7 @@
   
 - name: remove old Certbot
   file:
-    path: {{ certbot_dir }}/certbot
+    path: "{{ certbot_dir }}/certbot"
     state: absent
   when: rhel_version == 8  
   
