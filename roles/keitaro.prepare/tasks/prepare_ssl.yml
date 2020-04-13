@@ -6,7 +6,7 @@
   
 - name: remove old Certbot package
   dnf:
-    name: installed
+    name: certbot
     state: absent  
   when: rhel_version == 8
   
