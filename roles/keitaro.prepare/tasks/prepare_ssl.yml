@@ -23,18 +23,18 @@
 - name: download certbot-auto
   get_url:
     url: "{{ certbot_url }}"
-    dest: "{{ certbot_dir }}/certbot-auto"
+    dest: "{{ certbot_dir }}/certbot"
     mode: '0755'
     owner: "root"
     force: yes
   when: rhel_version == 8
   
 - name: install certbot-auto
-  shell: cd {{ certbot_dir }} && ./certbot-auto --install-only --non-interactive
+  shell: cd {{ certbot_dir }} && ./certbot --install-only --non-interactive
   
 - name: Set Certbot script variable.
   set_fact:
-    certbot_script: "{{ certbot_dir }}/certbot-auto"
+    certbot_script: "{{ certbot_dir }}/certbot"
 
 - name: Ensure certbot-auto is executable.
   file:
