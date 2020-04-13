@@ -10,13 +10,22 @@
     state: absent  
   when: rhel_version == 8
   
-- name: install certbot-auto
+- name: download certbot-auto
   get_url:
-    url: https://dl.eff.org/certbot-auto
-    dest: /usr/bin/certbot-auto
+    url: "{{ certbot_url }}"
+    dest: "{{ certbot_dir }}/certbot-auto"
     mode: '0755'
     owner: "root"
   when: rhel_version == 8
+  
+- name: Set Certbot script variable.
+  set_fact:
+    certbot_script: "{{ certbot_dir }}/certbot-auto"
+
+- name: Ensure certbot-auto is executable.
+  file:
+    path: "{{ certbot_script }}"
+    mode: 0755
 
 - name: Create directory for ssl certs
   file:
