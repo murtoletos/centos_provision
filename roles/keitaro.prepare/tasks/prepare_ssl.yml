@@ -30,7 +30,7 @@
   when: rhel_version == 8
   
 - name: install certbot-auto
-  shell: mv {{ certbot_dir }} && ./certbot-auto --install-only --non-interactive
+  shell: cd {{ certbot_dir }} && ./certbot-auto --install-only --non-interactive
   
 - name: Set Certbot script variable.
   set_fact:
