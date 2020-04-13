@@ -14,7 +14,7 @@
   dnf:
     name: installed
     state: absent  
-when: rhel_version == 8
+  when: rhel_version == 8
   
 - name: install certbot-auto
   get_url:
