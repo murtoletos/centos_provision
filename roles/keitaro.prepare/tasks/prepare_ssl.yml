@@ -1,4 +1,4 @@
-- name: Install packages
+- name: Install certbot
   package:
     name: certbot
     state: installed
@@ -8,6 +8,20 @@
   dnf:
     name: certbot
     state: installed
+  when: rhel_version == 8
+  
+- name: remove the old Certbot
+  dnf:
+    name: installed
+    state: absent  
+when: rhel_version == 8
+  
+- name: install certbot-auto
+  get_url:
+    url: https://dl.eff.org/certbot-auto
+    dest: /usr/bin/certbot-auto
+    mode: '0755'
+    owner: "root"
   when: rhel_version == 8
 
 - name: Create directory for ssl certs
