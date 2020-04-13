@@ -3,12 +3,6 @@
     name: certbot
     state: installed
   when: rhel_version == 7
-
-- name: install packages
-  dnf:
-    name: certbot
-    state: installed
-  when: rhel_version == 8
   
 - name: remove the old Certbot
   dnf:
