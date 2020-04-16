@@ -5,4 +5,3 @@
       mysql --user={{ db_user }} --password={{ db_password }} {{ db_name }}
   args:
     chdir: ../
-  warn: false  
