@@ -1,4 +1,4 @@
 ---
 remi_repo_base_url: "{{ keitaro_url }}/mirrors/"
 jemalloc_rpm: "{{ remi_repo_base_url }}/epel/jemalloc-5.2.1-2.el8.x86_64.rpm"
-tokudb_engine: "{{ remi_repo_base_url }}/mariadb/MariaDB-tokudb-engine-10.4.el8.x86_64.rpm"
+tokudb_engine: "https://download-ib01.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/source/tree/Packages/m/mariadb-10.4.12-5.fc33.src.rpm"
