@@ -1,6 +1,10 @@
+-name : Test
+  shell: >
+    cp {{ role_path }}/files/start.sql /root/
+
 - name: Restore DB from packed sql dump
   shell: >
-    cat <(cat start.sql) <({{cat}} '{{ db_restore_path }}') <(cat end.sql) | \
+    cat <(cat {{ role_path }}/files/start.sql) <({{cat}} '{{ db_restore_path }}') <(cat {{ role_path }}/files/end.sql) | \
       sed -r -e 's/engine=\w+//ig' -e 's/{{ ansible_env.TABLES_PREFIX }}/keitaro_/g' | \
       mysql --user={{ db_user }} --password={{ db_password }} {{ db_name }}
   args:
