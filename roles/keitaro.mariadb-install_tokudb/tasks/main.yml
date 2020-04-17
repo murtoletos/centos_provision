@@ -19,7 +19,7 @@
 
 - name: Install TokuDB Engine Centos 8
   dnf:
-    name: mariadb-tokudb-engine
+    name: "{{ tokudb_engine }}"
     state: installed
   when: rhel_version == 8
 
