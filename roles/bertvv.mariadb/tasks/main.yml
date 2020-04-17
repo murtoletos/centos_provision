@@ -69,6 +69,7 @@
   mysql_user:
     name: root
     host: "{{ item }}"
+    login_unix_socket: "{{ mariadb_socket }}"
     password: "{{ mariadb_root_password }}"
     state: present
   with_items:
