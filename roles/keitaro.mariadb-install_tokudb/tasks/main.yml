@@ -18,7 +18,7 @@
   when: rhel_version == 8
 
 - name: Install TokuDB Engine Centos 8
-  dnf:
+  yum:
     name: "{{ tokudb_engine }}"
     state: installed
   when: rhel_version == 8
