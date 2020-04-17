@@ -1,6 +1,5 @@
--name : Test
-  shell: >
-    cp {{ role_path }}/files/start.sql /root/
+- name : Test
+  shell: cp {{ role_path }}/files/start.sql /root/
 
 - name: Restore DB from packed sql dump
   shell: >
