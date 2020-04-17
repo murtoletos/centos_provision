@@ -18,8 +18,8 @@
   when: rhel_version == 8
 
 - name: Install TokuDB Engine Centos 8
-  yum:
-    name: "{{ tokudb_engine }}"
+  dnf:
+    name: mariadb-tokudb-engine
     state: installed
   when: rhel_version == 8
 
