@@ -11,6 +11,11 @@
     directories_list: "find /root/test -printf '- %p\n' | sort | tail -n+7"
   when: backups_count > 5
   
+- name: debug
+  debug:
+    msg: "An item: {{ item }}"
+    with_items: "{{ directories_list }}"
+  
 - name: remove older backups
   file:
     path: "{{ item }}"
