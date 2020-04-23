@@ -13,6 +13,10 @@
   
 - name: debug
   debug:
+    msg: "find /root/test -printf '- %p\n' | sort | tail -n+7"  
+  
+- name: debug
+  debug:
     msg: "An item: {{ item }}"
     with_items: "{{ directories_list }}"
   
