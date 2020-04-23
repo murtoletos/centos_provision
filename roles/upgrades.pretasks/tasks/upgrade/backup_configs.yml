@@ -5,10 +5,10 @@
     state: directory
     
 - set_fact:
-    backups_count: "cd /etc/test && ls | wc -l"
+    backups_count: "cd /root/test && ls | wc -l"
 
 - set_fact:
-    directories_list: "find /etc/test -printf '- %p\n' | sort | tail -n+7"
+    directories_list: "find /root/test -printf '- %p\n' | sort | tail -n+7"
   when: backups_count > 5
   
 - name: remove older backups

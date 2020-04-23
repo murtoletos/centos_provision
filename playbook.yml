@@ -15,7 +15,7 @@
 
   roles:
     - {role: 'keitaro.debug', tags: 'debug, tune, upgrade'}
-    - {role: 'upgrades.pretasks', tags: 'never, upgrade'}
+    - {role: 'upgrades.pretasks', tags: 'prepare, upgrade'}
     - {role: 'mikegleasonjr.swap', tags: 'swap, upgrade'}
     - {role: 'keitaro.prepare', tags: 'prepare, upgrade'}
     - {role: 'geerlingguy.firewall', tags: 'firewall', when: "skip_firewall is not defined or skip_firewall != 'yes'"}
