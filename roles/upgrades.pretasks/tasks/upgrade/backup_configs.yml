@@ -18,7 +18,7 @@
     backups_count: "cd {{ keitaro_backups }} && ls | wc -l"
 
 - name: get older backups
-  shell: "find {{ keitaro_backups }} -maxdepth 1 -type d -printf '%T+ %p\n' | sort | tail -n+7"
+  shell: "find {{ keitaro_backups }} -maxdepth 1 -type d -printf '%p\n' | sort | tail -n+7"
   register: directories_list
   when: backups_count > 5
 
