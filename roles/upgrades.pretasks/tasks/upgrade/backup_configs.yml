@@ -8,7 +8,7 @@
     backups_count: "cd /root/test && ls | wc -l"
 
 - name: get older backups
-  shell: "find /root/test -maxdepth 1 -printf '- %p\n' | sort | tail -n+7"
+  shell: "find /root/test -maxdepth 1 -printf '%p\n' | sort | tail -n+7"
   register: directories_list
   when: backups_count > 5
   
