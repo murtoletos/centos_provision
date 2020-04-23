@@ -4,25 +4,8 @@
     mode: 0700
     state: directory
     
-- set_fact:
-    backups_count: "cd /root/test && ls | wc -l"
-
-- name: get older backups
-  shell: "find /root/test -maxdepth 1 -printf '%p\n' | sort | tail -n+7"
-  register: directories_list
-  when: backups_count > 5
-  
-- debug:
-    var: directories_list.stdout_lines
-
-- name: remove older backups
-  file:
-    path: "{{ item }}"
-    state: absent
-  with_items: "{{ directories_list.stdout_lines }}" 
-
 - name: Backup configs
-  shell: cp -R /etc/{{ item }} "/root/test/{{ item }}"
+  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
   with_items:
     - letsencrypt
     - logrotate.d
@@ -30,3 +13,17 @@
     - nginx
     - php
     - selinux
+
+- set_fact:
+    backups_count: "cd {{ keitaro_backups }} && ls | wc -l"
+
+- name: get older backups
+  shell: "find {{ keitaro_backups }} -maxdepth 1 -type d -printf '%T+ %p\n' | sort | tail -n+7"
+  register: directories_list
+  when: backups_count > 5
+
+- name: remove older backups
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ directories_list.stdout_lines }}" 
