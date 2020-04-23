@@ -13,7 +13,7 @@
   when: backups_count > 5
   
 - debug:
-    var: directories_list.output
+    var: directories_list
 
 - name: remove older backups
   file:
