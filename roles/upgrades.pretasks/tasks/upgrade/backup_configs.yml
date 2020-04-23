@@ -7,12 +7,13 @@
 - set_fact:
     backups_count: "cd /root/test && ls | wc -l"
 
-- set_fact:
-    directories_list: "find /root/test -printf '- %p\n' | sort | tail -n+7"
+- name: get older backups
+  shell: "find /root/test -printf '- %p\n' | sort | tail -n+7"
+  register: directories_list
   when: backups_count > 5
   
 - debug:
-    var: directories_list
+    var: directories_list.output
 
 - name: remove older backups
   file:
