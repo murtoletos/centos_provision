@@ -4,16 +4,6 @@
     mode: 0700
     state: directory
     
-- name: Backup configs
-  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
-  with_items:
-    - letsencrypt
-    - logrotate.d
-    - my.cnf.d
-    - nginx
-    - php
-    - selinux
-
 - set_fact:
     backups_count: "cd {{ keitaro_backups }} && ls | wc -l"
 
@@ -26,4 +16,14 @@
   file:
     path: "{{ item }}"
     state: absent
-  with_items: "{{ directories_list.stdout_lines }}" 
+  with_items: "{{ directories_list.stdout_lines }}"
+
+- name: Backup configs
+  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
+  with_items:
+    - letsencrypt
+    - logrotate.d
+    - my.cnf.d
+    - nginx
+    - php
+    - selinux
