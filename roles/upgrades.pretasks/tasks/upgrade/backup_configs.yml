@@ -3,9 +3,23 @@
     path: "{{ keitaro_backup_dir }}"
     mode: 0700
     state: directory
+    
+- set_fact:
+    backups_count: "ls | wc -l"
+
+- set_fact:
+  directories_list: " find /root/test -printf '- %p\n' | sort | tail -n+7"
+  when: backups_count > 5
+  
+- name: remove older backups
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ directories_list }}"
+  when: directories_list
 
 - name: Backup configs
-  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
+  shell: cp -R /etc/{{ item }} "/root/test/{{ item }}"
   with_items:
     - letsencrypt
     - logrotate.d
