@@ -13,5 +13,6 @@ mariadb_my_config: ~/.my.cnf
 
 mariadb_socket: /var/lib/mysql/mysql.sock
 
-mariadb_version: 10.4
+mariadb_version: 10.2
+newest_mariadb_version: 10.4
 mariadb_version_rhel_8: 10.4
