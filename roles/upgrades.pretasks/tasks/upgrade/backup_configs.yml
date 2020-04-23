@@ -8,7 +8,7 @@
     backups_count: "cd /root/test && ls | wc -l"
 
 - set_fact:
-  directories_list: "find /root/test -printf '- %p\n' | sort | tail -n+7"
+    directories_list: "find /root/test -printf '- %p\n' | sort | tail -n+7"
   when: backups_count > 5
   
 - name: remove older backups
