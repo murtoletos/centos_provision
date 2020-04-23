@@ -27,15 +27,6 @@
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
   when: rhel_version == 7
-  register: mariadb_installed
-
-- name: upgrade all packages
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items: "{{ mariadb_packages }}"
-  tags: mariadb
-  when: rhel_version == 7 && mariadb_installed
 
 - name: Install packages step 1
   dnf:
