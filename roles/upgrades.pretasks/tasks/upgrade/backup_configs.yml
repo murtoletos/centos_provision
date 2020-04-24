@@ -15,9 +15,9 @@
 - name: remove older backups
   file:
     path: "{{ item }}"
-    mode: 0700
     state: absent
   with_items: "{{ directories_list.stdout_lines }}"
+  hen: backups_count > 5 
 
 - name: Backup configs
   shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
