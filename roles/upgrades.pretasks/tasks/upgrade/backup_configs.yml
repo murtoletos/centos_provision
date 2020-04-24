@@ -3,7 +3,17 @@
     path: "{{ keitaro_backup_dir }}"
     mode: 0700
     state: directory
-    
+
+- name: Backup configs
+  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
+  with_items:
+    - letsencrypt
+    - logrotate.d
+    - my.cnf.d
+    - nginx
+    - php
+    - selinux
+
 - set_fact:
     backups_count: "cd {{ keitaro_backups }} && ls | wc -l"
 
@@ -20,13 +30,3 @@
   retries: 3
   delay: 10
   ignore_errors: true
-
-- name: Backup configs
-  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
-  with_items:
-    - letsencrypt
-    - logrotate.d
-    - my.cnf.d
-    - nginx
-    - php
-    - selinux
