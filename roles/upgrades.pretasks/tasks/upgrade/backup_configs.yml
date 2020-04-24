@@ -17,7 +17,7 @@
     path: "{{ item }}"
     state: absent
   with_items: "{{ directories_list.stdout_lines }}"
-  hen: backups_count > 5 
+  when: backups_count > 5 
 
 - name: Backup configs
   shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
