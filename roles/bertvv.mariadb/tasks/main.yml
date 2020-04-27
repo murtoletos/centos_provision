@@ -12,11 +12,10 @@
     path: /etc/yum.repos.d/mariadb.repo
   register: mariadb_repo
 
-tasks:
-  - command: mysql --version
-    name: ls
-    register: mysql_version
-    debug: mysql_version
+- name:
+  shell: mysql --version
+  register: mysql_version
+  debug: mysql_version
   
 - name: Add MariaDB repo
   template:
