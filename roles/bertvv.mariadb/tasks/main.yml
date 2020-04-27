@@ -7,17 +7,26 @@
     - "{{ ansible_os_family }}.yml"
   tags: mariadb
 
+- name: Check MariaDB repo
+  stat:
+    path: /etc/yum.repos.d/mariadb.repo
+  register: mariadb_repo
+  
+- name: Get installed packages
+  debug:  
+    var: ansible_facts.packages
+
+- name: Check mariadb installed and verion
+  debug:
+    msg: "{{ ansible_facts.packages['MariaDB-client'] | length }} versions of foobar are installed!"
+  when: "'foobar' in ansible_facts.packages"
+  
+
 - name: Add MariaDB repo
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
   when: rhel_version == 7
-
-- name: Add MariaDB repo
-  template:
-    src: mariadb.centos8.repo.j2
-    dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 8
 
 - name: Install packages
   package:
