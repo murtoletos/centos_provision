@@ -12,24 +12,11 @@
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
 
-- name: Install packages step 1
-  package:
-    name: boost-program-options
-    state: installed
-  tags: mariadb
-
-- name: Install packages step 2
+- name: Install MariaDB packages
   dnf:
-    name: [MariaDB-server, MariaDB-client]
+    name: [MariaDB-server, MariaDB-common, MySQL-python]
     state: installed
     disablerepo: AppStream
-  tags: mariadb
-
-- name: Make sure pymysql is present
-  become: true # needed if the other tasks are not played as root
-  pip:
-    name: pymysql
-    state: present
   tags: mariadb
 
 - name: Ensure service is started
