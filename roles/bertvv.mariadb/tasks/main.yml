@@ -13,7 +13,7 @@
     dest: /etc/yum.repos.d/mariadb.repo
 
 - name: Install MariaDB packages
-  dnf:
+  package:
     name: [MariaDB-server, MariaDB-common, MySQL-python]
     state: installed
     disablerepo: AppStream
