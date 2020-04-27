@@ -15,7 +15,9 @@
 - name: Check maria version
   shell: mysql --version
   register: mysql_version
-  debug: mysql_version
+  
+- debug:
+    var: mysql_version
   
 - name: Add MariaDB repo
   template:
