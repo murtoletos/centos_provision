@@ -11,17 +11,13 @@
   stat:
     path: /etc/yum.repos.d/mariadb.repo
   register: mariadb_repo
-  
-- name: Get installed packages
-  debug:  
-    var: ansible_facts.packages
 
-- name: Check mariadb installed and verion
-  debug:
-    msg: "{{ ansible_facts.packages['MariaDB-client'] | length }} versions of foobar are installed!"
-  when: "'MariaDB-client' in ansible_facts.packages"
+tasks:
+  - command: mysql --version
+    name: ls
+    register: mysql_version
+    debug: mysql_version
   
-
 - name: Add MariaDB repo
   template:
     src: mariadb.repo.j2
