@@ -7,11 +7,6 @@
     - "{{ ansible_os_family }}.yml"
   tags: mariadb
 
-- name: Add MariaDB repo
-  template:
-    src: mariadb.repo.j2
-    dest: /etc/yum.repos.d/mariadb.repo
-    
 - name: Add official MariaDB repository
   yum_repository:
     name: MariaDB
