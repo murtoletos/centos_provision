@@ -11,13 +11,6 @@
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 7
-
-- name: Add MariaDB repo
-  template:
-    src: mariadb.centos8.repo.j2
-    dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 8
   
 - name: Check MariaDB repo
   stat:
@@ -32,21 +25,11 @@
     var: mysql_version
   when: mysql_version is match("/10.2.(.*?)-MariaDB/")
 
-- name: Install packages
-  package:
-    name: "{{ item }}"
-    state: installed
-    enablerepo: mariadb
-  with_items: "{{ mariadb_packages }}"
-  tags: mariadb
-  when: rhel_version == 7
-
 - name: Install packages step 1
   dnf:
     name: boost-program-options
     state: installed
   tags: mariadb
-  when: rhel_version == 8
 
 - name: Install packages step 2
   dnf:
@@ -54,7 +37,6 @@
     state: installed
     disablerepo: AppStream
   tags: mariadb
-  when: rhel_version == 8
 
 - name: Make sure pymysql is present
   become: true # needed if the other tasks are not played as root
@@ -62,7 +44,6 @@
     name: pymysql
     state: present
   tags: mariadb
-  when: rhel_version == 8
 
 - name: Ensure service is started
   service:
