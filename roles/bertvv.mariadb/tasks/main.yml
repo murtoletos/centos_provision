@@ -13,7 +13,7 @@
     dest: /etc/yum.repos.d/mariadb.repo
 
 - name: Install packages step 1
-  dnf:
+  package:
     name: boost-program-options
     state: installed
   tags: mariadb
