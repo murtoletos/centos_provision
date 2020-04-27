@@ -30,7 +30,7 @@
 
 - debug:
     var: mysql_version
-  when: mysql_version is match("10.2.(.*?)-MariaDB")
+  when: mysql_version is match("/10.2.(.*?)-MariaDB/")
 
 - name: Install packages
   package:
