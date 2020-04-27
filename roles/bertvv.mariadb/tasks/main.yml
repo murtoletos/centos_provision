@@ -19,7 +19,7 @@
 - name: Check mariadb installed and verion
   debug:
     msg: "{{ ansible_facts.packages['MariaDB-client'] | length }} versions of foobar are installed!"
-  when: "'foobar' in ansible_facts.packages"
+  when: "'MariaDB-client' in ansible_facts.packages"
   
 
 - name: Add MariaDB repo
