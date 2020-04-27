@@ -51,7 +51,7 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
+RELEASE_VERSION='2.10'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
@@ -1932,7 +1932,11 @@ install_packages(){
   if ! is_installed ansible; then
     install_package epel-release
     install_package ansible
-    install_package python3-libselinux
+    if isset "${VARS['rhel_version']}" && [ "${VARS['rhel_version']}" == "7" ]; then
+      install_package libselinux-python
+    else
+      install_package python3-libselinux
+    fi
   fi
 }
 #
