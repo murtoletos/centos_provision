@@ -11,19 +11,6 @@
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
-  
-- name: Check MariaDB repo
-  stat:
-    path: /etc/yum.repos.d/mariadb.repo
-  register: mariadb_repo
-
-- name: Check maria version
-  shell: mysql --version
-  register: mysql_version
-
-- debug:
-    var: mysql_version
-  when: mysql_version is match("/10.2.(.*?)-MariaDB/")
 
 - name: Install packages step 1
   dnf:
@@ -103,6 +90,19 @@
     - localhost
     - "{{ ansible_hostname }}"
   tags: mariadb
+  
+- name: Check MariaDB repo
+  stat:
+    path: /etc/yum.repos.d/mariadb.repo
+  register: mariadb_repo
+
+- name: Check maria version
+  shell: mysql --version
+  register: mysql_version
+
+- debug:
+    var: mysql_version
+  when: mysql_version is match("/10.2.(.*?)-MariaDB/")  
 
 - name: Create the databases
   mysql_db:
