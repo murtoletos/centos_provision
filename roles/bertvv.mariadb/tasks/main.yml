@@ -122,7 +122,8 @@
   register: mysql_version
 
 - debug:
-    var: mysql_version
+    var: mysql_version.stdout
+  when: mysql_version.stdout is match("/10.2.(.*?)-MariaDB/")  
 
 - name: Create the databases
   mysql_db:
