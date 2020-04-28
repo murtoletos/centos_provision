@@ -11,7 +11,7 @@
     state: installed
   when: rhel_version == 8
 
-- name:
+- name: Install jemalloc from rpm
   yum:
     name: jemalloc
     state: installed
