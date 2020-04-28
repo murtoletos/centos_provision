@@ -7,29 +7,20 @@
     - "{{ ansible_os_family }}.yml"
   tags: mariadb
 
-- name: Add official MariaDB repository
-  yum_repository:
-    name: MariaDB
-    description: Official MariaDB repository
-    baseurl: "http://yum.mariadb.org/{{ mariadb_version }}/{{ ansible_distribution|lower|regex_replace('redhat', 'rhel')|regex_replace('oraclelinux', 'centos') }}{{ ansible_distribution_major_version }}-amd64"
-    gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-    gpgcheck: true
+- name: Add MariaDB repo
+  template:
+    src: mariadb.repo.j2
+    dest: /etc/yum.repos.d/mariadb.repo
+
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: installed
+    enablerepo: mariadb
+  with_items: "{{ mariadb_packages }}"
   tags: mariadb
   when: rhel_version == 7
 
-- name: Install MariaDB packages
-  package:
-    name: [MariaDB, MariaDB-server, MySQL-python]
-    state: installed
-  tags: mariadb
-  when: rhel_version == 7
-  
-- name: Add MariaDB repo
-  template:
-    src: mariadb.centos8.repo.j2
-    dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 8
-  
 - name: Install packages step 1
   dnf:
     name: boost-program-options
