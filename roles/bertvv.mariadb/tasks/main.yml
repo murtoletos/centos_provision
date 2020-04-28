@@ -118,12 +118,11 @@
   register: mariadb_repo
 
 - name: Check maria version
-  shell: mysql --version
+  shell: mysql --version 
   register: mysql_version
 
 - debug:
     var: mysql_version
-  when: mysql_version is match("/10.2.(.*?)-MariaDB/")  
 
 - name: Create the databases
   mysql_db:
