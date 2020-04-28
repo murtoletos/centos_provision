@@ -112,9 +112,13 @@
   shell: mysql --version 
   register: mysql_version
 
+- name: set variable
+  shell: [[ "{{ mysql_version.stdout }}" =~ 10.4.(.*?)-MariaDB ]] && echo "true"
+  register: mariadb_version
+
 - debug:
-    var: mysql_version.stdout
-  when: mysql_version.stdout is match("/10.2.(.*?)-MariaDB/")  
+    var: mariadb_version.stdout
+  when: mariadb_version.stdout is match("/10.2.(.*?)-MariaDB/")  
 
 - name: Create the databases
   mysql_db:
