@@ -118,7 +118,7 @@
 
 - debug:
     var: mariadb_version.stdout
-  when: mariadb_version.stdout == true
+  when: mariadb_version.stdout == 'true'
 
 - name: Create the databases
   mysql_db:
