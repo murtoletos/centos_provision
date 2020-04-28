@@ -113,7 +113,7 @@
   register: mysql_version
 
 - name: set variable
-  shell: [[ {{ mysql_version.stdout }} =~ 10.4.(.*?)-MariaDB ]] && echo "true"
+  shell: "[[ {{ mysql_version.stdout }} =~ 10.4.(.*?)-MariaDB ]] && echo 'true'"
   register: mariadb_version
 
 - debug:
