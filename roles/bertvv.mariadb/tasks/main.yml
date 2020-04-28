@@ -19,7 +19,7 @@
 
 - name: Install MariaDB packages
   package:
-    name: [MariaDB-server, MariaDB-common, MySQL-python]
+    name: [MariaDB, MariaDB-server, MySQL-python]
     state: installed
   tags: mariadb
   when: rhel_version == 7
