@@ -48,6 +48,9 @@
     state: absent
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 8
+  
+- name: remove old cnf settings
+  shell: rm -rf /etc/my.cnf.d/network.cnf
 
 - include: centos7_install.yml
   when: mariadb_version.stdout != 'true' and rhel_version == 7
