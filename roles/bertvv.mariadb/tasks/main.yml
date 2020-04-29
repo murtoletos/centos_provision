@@ -88,7 +88,7 @@
   shell: "[[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]] && echo 'true'"
   register: mariadb_version
 
-- name: remove old maria
+- name: remove old maria Centos 7
   package:
     name: "{{ item }}"
     state: absent
@@ -97,6 +97,19 @@
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 7
 
+- name: remove old maria Centos 8
+  dnf:
+    name: [MariaDB-server, MariaDB-client]
+    state: absent
+  tags: mariadb
+  when: mariadb_version.stdout != 'true' and rhel_version == 8
+  
+- include: centos7_install.yml  
+  when: mariadb_version.stdout != 'true' and rhel_version == 7
+  
+- include: centos8_install.yml
+  when: mariadb_version.stdout != 'true' and rhel_version == 8  
+  
 - name: Create the databases
   mysql_db:
     name: "{{ item }}"
