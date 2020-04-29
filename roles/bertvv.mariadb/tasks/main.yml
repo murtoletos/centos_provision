@@ -40,7 +40,6 @@
 - name: Clean unwanted olderstuff
   yum:
     autoremove: yes
-    purge: yes  
 
 - name: remove old maria Centos 8
   dnf:
