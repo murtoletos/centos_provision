@@ -42,7 +42,6 @@
     state: started
     enabled: yes
   tags: mariadb
-  when: mariadb_version.stdout != 'true'
 
 - name: remove old maria Centos 8
   dnf:
