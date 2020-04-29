@@ -91,11 +91,11 @@
 - name: remove old maria
   package:
     name: "{{ item }}"
-    state: installed
+    state: absent
     enablerepo: mariadb
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
-  when: mariadb_version.stdout != 'true' && rhel_version == 7
+  when: mariadb_version.stdout != 'true' and rhel_version == 7
 
 - name: Create the databases
   mysql_db:
