@@ -36,16 +36,20 @@
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 7
 
+- name: turnoff service
+  service:
+    name: "{{ mariadb_service }}"
+    state: started
+    enabled: yes
+  tags: mariadb
+  when: mariadb_version.stdout != 'true'
+
 - name: remove old maria Centos 8
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: absent
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 8
-  
-- name: Clean unwanted olderstuff
-  yum:
-    autoremove: yes  
 
 - include: centos7_install.yml
   when: mariadb_version.stdout != 'true' and rhel_version == 7
