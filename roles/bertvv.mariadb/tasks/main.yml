@@ -16,11 +16,6 @@
     
 - include: centos8_install.yml
     
-- name: Check MariaDB repo
-  stat:
-    path: /etc/yum.repos.d/mariadb.repo
-  register: mariadb_repo
-
 - name: Check maria version
   shell: mysql --version
   register: mysql_version
@@ -37,16 +32,16 @@
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 7
 
-- name: Clean unwanted olderstuff
-  yum:
-    autoremove: yes
-
 - name: remove old maria Centos 8
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: absent
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 8
+  
+- name: Clean unwanted olderstuff
+  yum:
+    autoremove: yes  
 
 - include: centos7_install.yml
   when: mariadb_version.stdout != 'true' and rhel_version == 7
