@@ -41,7 +41,7 @@
     name: galera
     state: absent
   tags: mariadb
-  when: mariadb_version.stdout != 'true' and rhel_version == 7
+  when: mariadb_version.stdout != 'true'
 
 - name: remove old maria Centos 8
   dnf:
