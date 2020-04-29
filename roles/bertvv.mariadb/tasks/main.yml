@@ -29,6 +29,27 @@
   shell: "if [[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]]; then echo 'true'; else echo '' ; fi"
   register: mariadb_version
 
+- name: remove old maria Centos 7
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ mariadb_packages }}"
+  tags: mariadb
+  when: mariadb_version.stdout != 'true' and rhel_version == 7
+
+- name: remove old maria Centos 8
+  dnf:
+    name: [MariaDB-server, MariaDB-client]
+    state: absent
+  tags: mariadb
+  when: mariadb_version.stdout != 'true' and rhel_version == 8
+
+- include: centos7_install.yml
+  when: mariadb_version.stdout != 'true' and rhel_version == 7
+
+- include: centos8_install.yml
+  when: mariadb_version.stdout != 'true' and rhel_version == 8
+
 - name: Ensure service is started
   service:
     name: "{{ mariadb_service }}"

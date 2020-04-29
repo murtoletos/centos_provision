@@ -2,7 +2,6 @@
   package:
     name: "{{ item }}"
     state: installed
-    enablerepo: mariadb
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
   when: rhel_version == 7
