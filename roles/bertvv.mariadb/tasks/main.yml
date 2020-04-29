@@ -25,7 +25,8 @@
   service:
     name: "{{ mariadb_service }}"
     state: stopped
-  tags: mariadb  
+  tags: mariadb
+  allow_errors: yes
 
 - name: remove old maria Centos 7
   package:
