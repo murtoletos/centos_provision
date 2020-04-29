@@ -23,7 +23,7 @@
   
 - name: Ensure service is stopped
   service:
-    name: []"{{ mariadb_service }}", mysqld]
+    name: mysql
     state: stopped
   tags: mariadb
   ignore_errors: yes
