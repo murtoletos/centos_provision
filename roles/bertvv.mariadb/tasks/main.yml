@@ -11,14 +11,11 @@
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
-
-- include: centos7_install.yml
-    
-- include: centos8_install.yml
     
 - name: Check maria version
   shell: mysql --version
   register: mysql_version
+  ignore_errors: yes
 
 - name: set variable
   shell: "if [[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]]; then echo 'true'; else echo '' ; fi"
