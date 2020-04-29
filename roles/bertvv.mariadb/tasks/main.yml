@@ -20,6 +20,13 @@
 - name: set variable
   shell: "if [[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]]; then echo 'true'; else echo '' ; fi"
   register: mariadb_version
+  
+- name: turnoff service
+  service:
+    name: "{{ mariadb_service }}"
+    state: started
+    enabled: yes
+  tags: mariadb  
 
 - name: remove old maria Centos 7
   package:
@@ -35,13 +42,6 @@
     state: absent
   tags: mariadb
   when: mariadb_version.stdout != 'true' and rhel_version == 7
-
-- name: turnoff service
-  service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
-  tags: mariadb
 
 - name: remove old maria Centos 8
   dnf:
