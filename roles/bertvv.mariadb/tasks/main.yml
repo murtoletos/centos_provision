@@ -23,7 +23,7 @@
   
 - name: Ensure service is stopped
   service:
-    name: mysql
+    name: mariadb
     state: stopped
   tags: mariadb
   ignore_errors: yes
@@ -51,7 +51,7 @@
   when: mariadb_version.stdout != 'true' and rhel_version == 8
   
 - name: remove old cnf settings
-  shell: rm -rf /etc/my.cnf.d/network.cnf
+  shell: rm -rf /var/lib/mysql/mysql.sock
 
 - include: centos7_install.yml
   when: mariadb_version.stdout != 'true' and rhel_version == 7
