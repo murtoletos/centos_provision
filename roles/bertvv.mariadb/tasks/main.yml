@@ -85,7 +85,7 @@
   register: mysql_version
 
 - name: set variable
-  shell: "if '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB; then echo 'true'; else 'false'; fi"
+  shell: "if [[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]]; then echo 'true'; else echo '' ; fi"
   register: mariadb_version
 
 - name: remove old maria Centos 7
