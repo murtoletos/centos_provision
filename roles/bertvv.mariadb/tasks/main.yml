@@ -23,10 +23,10 @@
   
 - name: Ensure service is stopped
   service:
-    name: "{{ mariadb_service }}"
+    name: []"{{ mariadb_service }}", mysqld]
     state: stopped
   tags: mariadb
-  allow_errors: true
+  ignore_errors: yes
 
 - name: remove old maria Centos 7
   package:
