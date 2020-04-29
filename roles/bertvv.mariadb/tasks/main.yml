@@ -53,6 +53,15 @@
 - name: remove old cnf settings
   shell: rm -rf /var/lib/mysql/mysql.sock
 
+name: remove old configs
+  file:
+    path: {{ item }}
+    state: absent
+  with_items: 
+    - /root/my.cnf
+    - /var/lib/mysql/mysql.sock
+    - /etc/my.cnf.d/network.cnf
+
 - include: centos7_install.yml
   when: mariadb_version.stdout != 'true' and rhel_version == 7
 
