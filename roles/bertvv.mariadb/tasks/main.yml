@@ -11,59 +11,45 @@
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
-    
-- name: Check maria version
-  shell: mysql --version
-  register: mysql_version
-  ignore_errors: yes
+  when: rhel_version == 7
 
-- name: set variable
-  shell: "if [[ '{{ mysql_version.stdout }}' =~ 10.4.(.*?)-MariaDB ]]; then echo 'true'; else echo '' ; fi"
-  register: mariadb_version
-  
-- name: Ensure service is stopped
-  service:
-    name: mariadb
-    state: stopped
-  tags: mariadb
-  ignore_errors: yes
+- name: Add MariaDB repo
+  template:
+    src: mariadb.centos8.repo.j2
+    dest: /etc/yum.repos.d/mariadb.repo
+  when: rhel_version == 8
 
-- name: remove old maria Centos 7
+- name: Install packages
   package:
     name: "{{ item }}"
-    state: absent
+    state: installed
+    enablerepo: mariadb
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
-  when: mariadb_version.stdout != 'true' and rhel_version == 7
-    
-- name: remove old galera
-  package: 
-    name: galera
-    state: absent
-  tags: mariadb
-  when: mariadb_version.stdout != 'true'
+  when: rhel_version == 7
 
-- name: remove old maria Centos 8
+- name: Install packages step 1
+  dnf:
+    name: boost-program-options
+    state: installed
+  tags: mariadb
+  when: rhel_version == 8
+
+- name: Install packages step 2
   dnf:
     name: [MariaDB-server, MariaDB-client]
-    state: absent
+    state: installed
+    disablerepo: AppStream
   tags: mariadb
-  when: mariadb_version.stdout != 'true' and rhel_version == 8
+  when: rhel_version == 8
 
-- name: remove old configs
-  file:
-    path: "{{ item }}"
-    state: absent
-  with_items: 
-    - /root/my.cnf
-    - /var/lib/mysql/mysql.sock
-    - /etc/my.cnf.d/network.cnf
-
-- include: centos7_install.yml
-  when: mariadb_version.stdout != 'true' and rhel_version == 7
-
-- include: centos8_install.yml
-  when: mariadb_version.stdout != 'true' and rhel_version == 8
+- name: Make sure pymysql is present
+  become: true # needed if the other tasks are not played as root
+  pip:
+    name: pymysql
+    state: present
+  tags: mariadb
+  when: rhel_version == 8
 
 - name: Ensure service is started
   service:
@@ -83,19 +69,6 @@
   mysql_user:
     name: root
     host: "{{ item }}"
-    password: "{{ mariadb_root_password }}"
-    state: present
-  with_items:
-    - 127.0.0.1
-    - ::1
-    - localhost
-  tags: mariadb
-  when: rhel_version == 7
-  
-- name: Update root password
-  mysql_user:
-    name: root
-    host: "{{ item }}"
     login_unix_socket: "{{ mariadb_socket }}"
     password: "{{ mariadb_root_password }}"
     state: present
@@ -104,7 +77,6 @@
     - ::1
     - localhost
   tags: mariadb
-  when: rhel_version == 8
 
 - name: Install ~/.my.cnf
   template:
@@ -137,7 +109,7 @@
     - localhost
     - "{{ ansible_hostname }}"
   tags: mariadb
-  
+
 - name: Create the databases
   mysql_db:
     name: "{{ item }}"
