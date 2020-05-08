@@ -50,7 +50,7 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
+RELEASE_VERSION='2.10'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
@@ -1093,6 +1093,9 @@ ensure_valid(){
   local validation_methods="${3}"
   error="$(get_error "${var_name}" "${validation_methods}")"
   if isset "$error"; then
+      if [ option = K ]; then
+        echo "${VARS['license_key']}"
+      fi
     print_err "-${option}: $(translate "prompt_errors.${error}" "value=${VARS[$var_name]}")"
     exit ${FAILURE_RESULT}
   fi
