@@ -1109,6 +1109,7 @@ ensure_valid(){
   local validation_methods="${3}"
   error="$(get_error "${var_name}" "${validation_methods}")"
   echo "${VARS['license_key']}"
+  echo 'test'
   if isset "$error"; then
       if [ option = K ]; then
         echo "${VARS['license_key']}"
