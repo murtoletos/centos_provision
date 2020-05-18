@@ -3,7 +3,7 @@ before_script:
   - source ci/bin/prepare_envs
 
 variables:
-  RUBY_VERSION: "ruby:2.3.5"
+  RUBY_VERSION: "2.3.5"
 
 # Stages
 stages:
@@ -33,7 +33,7 @@ build_scripts:
 run_rspec:
   stage: quality_checks
   tags: [kubernetes]
-  image: "${RUBY_VERSION}"
+  image: "ruby:${RUBY_VERSION}"
   dependencies:
     - build_scripts
   services:
