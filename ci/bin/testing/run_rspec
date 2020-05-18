@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-export HOME_DIR="${PWD}"
+set -x
+
+export HOME_DIR="${pwd}"
 cd scripts && bundle exec rspec
 
