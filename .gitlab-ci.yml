@@ -17,7 +17,7 @@ build_scripts:
     - ci/bin/build/compile
     - ci/bin/testing/validate_scripts
   artifacts:
-    expire_in: 1 day
+    expire_in: 1 hour
     paths:
       - scripts/install.sh
       - scripts/add-site.sh
@@ -29,7 +29,7 @@ build_scripts:
     - /^current$/
 
 run_rspec:
-  tags: [shell, ruby]
+  tags: [kubernetes]
   stage: quality_checks
   dependencies:
     - build_scripts
