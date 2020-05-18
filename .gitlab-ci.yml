@@ -2,9 +2,6 @@
 before_script:
   - source ci/bin/prepare_envs
 
-variables:
-  RUBY_VERSION: "2.3.5"
-
 # Stages
 stages:
   - build
@@ -15,6 +12,7 @@ stages:
 build_scripts:
   tags: [shell]
   stage: build
+  interruptible: true
   script:
     - ci/bin/build/compile
     - ci/bin/testing/validate_scripts
@@ -33,7 +31,8 @@ build_scripts:
 run_rspec:
   stage: quality_checks
   tags: [kubernetes]
-  image: "ruby:${RUBY_VERSION}"
+  interruptible: true
+  image: apliteni/bundle-rspec
   dependencies:
     - build_scripts
   services:
