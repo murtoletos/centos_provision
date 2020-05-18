@@ -3,6 +3,9 @@ before_script:
   - source ci/bin/prepare_envs
   - ci/bin/allow_git_push
 
+variables:
+  RUBY_VERSION: "ruby:2.3.5"
+
 # Stages
 stages:
   - build
@@ -29,8 +32,9 @@ build_scripts:
     - /^current$/
 
 run_rspec:
-  tags: [kubernetes]
   stage: quality_checks
+  tags: [kubernetes]
+  image: "${RUBY_VERSION}"
   dependencies:
     - build_scripts
   script:
