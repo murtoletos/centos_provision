@@ -40,6 +40,7 @@ run_rspec:
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
   script:
     - ci/bin/testing/validate_scripts
     - ci/bin/testing/install_bundle
