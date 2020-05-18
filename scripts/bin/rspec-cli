@@ -4,7 +4,7 @@ set  -x
 docker run \
     --rm -it \
     --privileged \
-    -e "HOME_DIR=${PWD}" \
+    -e "HOME_DIR=${CI_PROJECT_DIR}" \
     -v ${PWD}/../:/data \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/tmp/:/data/scripts/tmp/ \
