@@ -1,7 +1,6 @@
 # Shared
 before_script:
   - source ci/bin/prepare_envs
-  - ci/bin/allow_git_push
 
 variables:
   RUBY_VERSION: "ruby:2.3.5"
@@ -52,7 +51,9 @@ run_rspec:
 deploy:
   tags: [shell]
   stage: release
-  script: ci/bin/deploy.sh
+  script:
+    - ci/bin/allow_git_push
+    - ci/bin/deploy.sh
   when: manual
   allow_failure: false
   only:
