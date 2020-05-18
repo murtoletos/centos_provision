@@ -61,13 +61,15 @@ class Script
 
   def make_cmd(current_dir)
     if docker_image
-      docker_run = "docker run #{docker_env} -e CI=#{ENV['CI']} --name keitaro_scripts_test -i --rm"
+      docker_run = "docker run #{docker_env} -e CI=#{ENV['CI']} --name keitaro_scripts_test -i --rm --privileged"
+      docker_run += " -v /var/run/docker.sock:/var/run/docker.sock "
       docker_run += " -v #{scripts_dir}:#{DOCKER_SCRIPTS_DIR}"
       docker_run += " -v #{current_dir}:#{DOCKER_DATA_DIR}"
       docker_run += " -w #{DOCKER_DATA_DIR}"
       docker_run += " #{docker_image}"
       evaluated_commands = make_command_stubs + commands + [command_with_args("./#{@script_command}", args)]
-      %Q{#{docker_run} sh -c '#{evaluated_commands.join(' && ')}'}
+      cmd = %Q{#{docker_run} sh -c '#{evaluated_commands.join(' && ')}'}
+      cmd
     else
       raise "Cann't stub fake commands in real system. Please use docker mode." if command_stubs.any? || commands.any?
       [stringified_env, command_with_args("#{current_dir}/#{@script_command}", args)]

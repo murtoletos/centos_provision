@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-
-cd scripts/ && bundle exec rspec
+bundle exec rspec
 

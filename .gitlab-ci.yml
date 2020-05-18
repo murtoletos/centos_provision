@@ -36,6 +36,11 @@ run_rspec:
   image: "${RUBY_VERSION}"
   dependencies:
     - build_scripts
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
   script:
     - ci/bin/testing/validate_scripts
     - ci/bin/testing/install_bundle
@@ -43,7 +48,7 @@ run_rspec:
   cache:
     key: vendor
     paths:
-      - vendor/
+      - scripts/vendor/
   except:
     - /^release-/
     - /^current$/
