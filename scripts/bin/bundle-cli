@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 docker run --rm -it \
-    -v ${PWD}:/data \
-    -w /data \
+    -v ${PWD}/../:/data \
+    -v /usr/local/bundle \
+    -w /data/scripts \
     apliteni/bundle-rspec \
     bundle $@

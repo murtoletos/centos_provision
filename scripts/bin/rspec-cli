@@ -6,6 +6,7 @@ docker run \
     --privileged \
     -e "HOME_DIR=${PWD}" \
     -v ${PWD}/../:/data \
+    -v /usr/local/bundle \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/tmp/:/data/scripts/tmp/ \
     -w /data/scripts \
