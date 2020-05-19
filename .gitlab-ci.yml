@@ -41,11 +41,7 @@ build_scripts:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$CI_COMMIT_REF_NAME =~ /(release-|current)/'
-      when: never
-    - if: '$CI_COMMIT_REF_NAME == "INST-126"'
-      when: manual
-    - when: never
+    - when: always
 
 run_rspec:
   extends: [.quality-checks-common]
@@ -73,7 +69,6 @@ legacy_deploy:
   script:
     - ci/bin/deployment/allow_git_push
     - ci/bin/deployment/legacy_deploy
-  when: manual
   allow_failure: false
   dependencies:
     - build_scripts
