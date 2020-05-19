@@ -32,11 +32,7 @@ build_scripts:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$CI_COMMIT_REF_NAME =~ /(release-|current)/'
-      when: never
-    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
-      when: manual
-    - when: never
+    - when: always
 
 # Quality checks
 .quality-checks-common:
@@ -47,7 +43,7 @@ build_scripts:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(release-|current)/'
       when: never
-    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"'
       when: manual
     - when: never
 
@@ -86,7 +82,7 @@ legacy_deploy:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: on_success
-    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"'
       when: manual
     - when: never
 
@@ -107,8 +103,8 @@ deploy:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: on_success
-    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"'
       when: always
-    - if: '$ACTION == "build"/'
+    - if: '$ACTION == "build"'
       when: always
     - when: never
