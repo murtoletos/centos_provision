@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set  -x
 
+# TODO тесты до сих пор не запускаются из docker'а
+
 docker run \
     --rm -it \
     --privileged \
