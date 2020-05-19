@@ -11,7 +11,7 @@ variables:
 stages:
   - build
   - quality_checks
-  - release
+  - deployment
 
 # Build jobs
 build_scripts:
@@ -61,7 +61,6 @@ run_rspec:
 # Deployment jobs
 .deployment-jobs-common:
   stage: deployment
-
 
 legacy_deploy:
   extends: [.deployment-jobs-common]
