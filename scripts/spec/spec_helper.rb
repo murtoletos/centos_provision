@@ -11,11 +11,6 @@ require 'byebug'
 require 'inventory'
 require 'script'
 
-if ENV['CI']
-  require 'knapsack'
-  Knapsack::Adapters::RspecAdapter.bind
-end
-
 RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
