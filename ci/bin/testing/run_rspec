@@ -3,5 +3,8 @@
 set -x
 
 export HOME_DIR="${CI_PROJECT_DIR}"
+
+ls -la /var/run/docker.sock
+
 cd scripts && bundle exec rspec
 
