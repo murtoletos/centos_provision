@@ -4,7 +4,5 @@ set -x
 
 export HOME_DIR="${CI_PROJECT_DIR}"
 
-docker ps
-
-cd scripts && bundle exec rspec
+cd scripts && bundle exec rspec || docker ps
 

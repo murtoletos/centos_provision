@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-cd scripts/ && bundle install --path vendor/
+cd scripts/ && bundle install
 
