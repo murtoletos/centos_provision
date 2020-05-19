@@ -4,6 +4,7 @@ set  -x
 docker run \
     --rm -it \
     --privileged \
+    -e "DOCKER_HOST=tcp://localhost:2375" \
     -e "HOME_DIR=${PWD}" \
     -v ${PWD}/../:/data \
     -v /usr/local/bundle \

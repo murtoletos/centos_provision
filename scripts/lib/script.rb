@@ -62,7 +62,6 @@ class Script
   def make_cmd(current_dir)
     if docker_image
       docker_run = "docker run #{docker_env} -e CI=#{ENV['CI']} --name keitaro_scripts_test -i --rm --privileged"
-      #docker_run += " -v /var/run/docker.sock:/var/run/docker.sock "
       docker_run += " -v #{scripts_dir}:#{DOCKER_SCRIPTS_DIR}"
       docker_run += " -v #{current_dir}:#{DOCKER_DATA_DIR}"
       docker_run += " -w #{DOCKER_DATA_DIR}"
