@@ -2,13 +2,18 @@
 before_script:
   - source ci/bin/prepare_envs
 
+variables:
+  BUILDS_FOLDER: builds
+  LOCAL_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_SHORT_SHA}"
+  REMOTE_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_SHORT_SHA}"
+
 # Stages
 stages:
   - build
   - quality_checks
   - release
 
-# Jobs
+# Build jobs
 build_scripts:
   tags: [shell]
   stage: build
@@ -24,23 +29,31 @@ build_scripts:
       - scripts/enable-ssl.sh
       - scripts/fix-renewal-certs-cron-job.sh
       - scripts/test-run-command.sh
-  except:
-    - /^release-/
-    - /^current$/
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(release-|current)/'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+      when: manual
+    - when: never
+
+# Quality checks
+.quality-checks-common:
+  stage: quality_checks
+  interruptible: true
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(release-|current)/'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+      when: manual
+    - when: never
 
 run_rspec:
-  stage: quality_checks
-  tags: [kubernetes]
-  interruptible: true
-  image: apliteni/bundle-rspec
-  dependencies:
-    - build_scripts
-  services:
-    - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://localhost:2375
+  extends: [.quality-checks-common]
+  tags: [shell]
   script:
     - ci/bin/testing/validate_scripts
     - ci/bin/testing/install_bundle
@@ -49,20 +62,53 @@ run_rspec:
     key: vendor
     paths:
       - scripts/vendor/
-  except:
-    - /^release-/
-    - /^current$/
+  dependencies:
+    - build_scripts
 
-deploy:
+
+# Deployment jobs
+.deployment-jobs-common:
+  stage: deployment
+
+
+legacy_deploy:
+  extends: [.deployment-jobs-common]
   tags: [shell]
-  stage: release
   script:
-    - ci/bin/allow_git_push
-    - ci/bin/deploy.sh
+    - ci/bin/deployment/allow_git_push
+    - ci/bin/deployment/legacy_deploy
   when: manual
   allow_failure: false
-  only:
-    - /^master$/
-  except:
-    - /^release-/
-    - /^current$/
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
+      when: on_success
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+      when: manual
+    - when: never
+
+
+deploy:
+  extends: [.deployment-jobs-common]
+  tags: [kubernetes]
+  image: apliteni/mc
+  script:
+    - ci/bin/deployment/create_build
+    - ci/bin/deployment/prepare_mc
+    - ci/bin/deployment/upload_to_s3
+  allow_failure: false
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
+      when: on_success
+    - if: '$CI_COMMIT_REF_NAME == "INST-126"/'
+      when: always
+    - if: '$ACTION == "build"/'
+      when: always
+    - when: never
