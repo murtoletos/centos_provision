@@ -45,7 +45,7 @@ build_scripts:
 
 run_rspec:
   extends: [.quality-checks-common]
-  tags: [shell]
+  tags: [ruby]
   script:
     - ci/bin/testing/validate_scripts
     - ci/bin/testing/install_bundle
