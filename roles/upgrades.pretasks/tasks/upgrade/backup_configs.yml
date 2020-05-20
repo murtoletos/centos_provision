@@ -4,13 +4,8 @@
     mode: 0700
     state: directory
 
-- name: Creates letsencrypt directory if not exist
-  file:
-    path: /etc/letsencrypt
-    state: directory
-
 - name: Backup configs
-  shell: cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
+  shell: test -e "/etc/{{item}}" && cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
   with_items:
     - letsencrypt
     - logrotate.d
