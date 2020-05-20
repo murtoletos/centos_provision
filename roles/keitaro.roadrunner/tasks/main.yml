@@ -2,14 +2,14 @@
     url: https://api.github.com/repos/spiral/roadrunner/releases/latest
     return_content: true
   register: json_reponse
-  
+
 - name: Register last roadrunner version
   set_fact:
-    tag_name: "{{ json_reponse.json.tag_name }}"
+    tag_name: "{{ json_reponse.json.tag_name | replace('v', '') }}"
 
 - name: Download and unpack RoadRunner
   shell: >
-    curl -fskSL {{ json_reponse.json.tarball_url }} | \
+    curl -fskSL https://github.com/spiral/roadrunner/releases/download/v{{ rr_version }}/{{ rr_release_name }}.tar.gz | \
      tar -xz --no-same-owner --no-same-permissions --strip 1 {{ rr_release_name }}/rr && \
      mv /usr/local/bin/rr /usr/local/bin/roadrunner-{{ rr_version }}
   args:
