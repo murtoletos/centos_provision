@@ -1,5 +1,5 @@
 - uri:
-    url: https://api.github.com/repos/ansible/ansible/releases/latest
+    url: https://api.github.com/repos/spiral/roadrunner//releases/latest
     return_content: true
   register: json_reponse
   
