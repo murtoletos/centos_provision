@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-rootDir="."
-scriptsDir="$rootDir/scripts"
+root_dir="."
+scriptsDir="$root_dir/scripts"
 
 echo "Validate scripts"
 cd $scriptsDir

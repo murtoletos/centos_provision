@@ -10,7 +10,7 @@ then
 fi
 
 
-if [ -z $@ ]
+if [[ "$#" == "1" ]]
 then
   echo "You must provide version. Example ./build BRANCH_NAME";
   exit 1;
@@ -22,7 +22,7 @@ if [[ $(git status -s) ]]; then
   exit 1;
 fi
 
-branch=${@}
+branch=${1}
 unpushed=$(git cherry ${branch} -v)
 
 if [[ $unpushed == *"+"* ]]; then
