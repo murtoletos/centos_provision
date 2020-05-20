@@ -1,3 +1,12 @@
+- uri:
+    url: https://api.github.com/repos/ansible/ansible/releases/latest
+    return_content: true
+  register: json_reponse
+  
+- name: Register last roadrunner version
+  set_fact:
+    tag_name: "{{ json_reponse.json.tag_name }}"
+
 - name: Download and unpack RoadRunner
   shell: >
     curl -fskSL https://github.com/spiral/roadrunner/releases/download/v{{ rr_version }}/{{ rr_release_name }}.tar.gz | \
