@@ -1,4 +1,4 @@
 keitaro_backup_time: "{{ ansible_date_time.iso8601_basic_short }}"
 keitaro_backups: "/etc/keitaro/backups"
 keitaro_backup_dir: "/etc/keitaro/backups/{{ keitaro_backup_time }}"
-backups_amount: 5
+keitaro_backups_amount: 5
