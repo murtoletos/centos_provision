@@ -27,4 +27,4 @@
 - name: fail if roadrunner not installed
   fail: 
     msg: "Roadrunner is not installed"
-  when: not rr.stat.exists and not roadrunner.stat.exists
+  when: not rr.stat.exists or not roadrunner.stat.exists
