@@ -7,13 +7,6 @@
     chdir: /usr/local/bin
     creates: "/usr/local/bin/roadrunner-{{ rr_version }}"
 
-- name: Make symlink to current roadrunner
-  file:
-    src: "roadrunner-{{ rr_version }}"
-    dest: /usr/local/bin/roadrunner
-    state: link
-    force: true
-
 - name: Make rr -> roadrunner symlink
   file:
     src: "roadrunner"
