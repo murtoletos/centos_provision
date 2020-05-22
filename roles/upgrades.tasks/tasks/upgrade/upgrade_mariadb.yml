@@ -4,6 +4,9 @@
 - set_fact:
     mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
     
+- debug:
+    msg: mariadb_version_output.stdout
+    
 - name: Ensure service is stopped
   service:
     name: mariadb
