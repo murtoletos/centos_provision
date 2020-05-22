@@ -4,8 +4,10 @@
 - set_fact:
     mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
     
-- debug:
-    msg: mariadb_version
+- name: Add MariaDB repo
+  template:
+    src: mariadb.repo.j2
+    dest: /etc/yum.repos.d/mariadb.repo
     
 - name: Ensure service is stopped
   service:
