@@ -67,5 +67,16 @@
     name: pymysql
     state: present
   tags: mariadb
-  when: rhel_version == 8  
+  when: rhel_version == 8
+  
+- name: Update root password
+  mysql_user:
+    login_unix_socket: "{{ mariadb_socket }}"
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+  tags: mariadb
+  when: rhel_version == 8
+  
 
