@@ -24,7 +24,12 @@
   tags: mariadb
   when: rhel_version == 7 and mariadb_version_output is not search('10.4')
 
-
+- name: remove old galera
+  package:
+    name: galera
+    state: absent
+  tags: mariadb
+  when: mariadb_version_output is not search('10.4')
 
 - name: remove old maria Centos 8
   dnf:
