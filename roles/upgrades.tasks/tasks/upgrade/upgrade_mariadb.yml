@@ -63,7 +63,6 @@
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: installed
-    disablerepo: AppStream
   tags: mariadb
   when: rhel_version == 8
 
