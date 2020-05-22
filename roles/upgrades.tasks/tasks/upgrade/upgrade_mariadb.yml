@@ -63,6 +63,7 @@
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: installed
+    disablerepo: AppStream
   tags: mariadb
   when: rhel_version == 8
 
@@ -73,7 +74,7 @@
     state: present
   tags: mariadb
   when: rhel_version == 8
-  
+
 - name: Update root password
   mysql_user:
     name: root
