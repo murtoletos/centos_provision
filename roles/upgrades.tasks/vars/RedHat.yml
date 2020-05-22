@@ -1,0 +1,20 @@
+# roles/mariadb/vars/main.yml
+---
+
+mariadb_packages:
+  - MariaDB
+  - MariaDB-server
+  - MySQL-python
+
+mariadb_service: mariadb
+
+mariadb_config: /etc/my.cnf.d/network.cnf
+mariadb_my_config: ~/.my.cnf
+
+mariadb_version: 10.4
+
+mariadb_socket: /var/lib/mysql/mysql.sock
+
+tokudb_engine: "https://yum.mariadb.org/10.4/rhel8-amd64/rpms/MariaDB-tokudb-engine-{{ tokudb_version }}-1.el8.x86_64.rpm"
+
+
