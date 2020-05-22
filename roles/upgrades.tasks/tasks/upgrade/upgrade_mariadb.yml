@@ -5,13 +5,13 @@
     mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
     
 - debug:
-    msg: mariadb_version_output.stdout
+    msg: mariadb_version
     
 - name: Ensure service is stopped
   service:
     name: mariadb
     state: stopped
-  when: mariadb_version_output.stdout is not search('10.4') 
+  when: mariadb_version_output is not search('10.4') 
     
 - name: remove old maria Centos 7
   package:
@@ -19,22 +19,22 @@
     state: absent
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
-  when: rhel_version == 7 and mariadb_version_output.stdout is not search('10.4')
+  when: rhel_version == 7 and mariadb_version_output is not search('10.4')
 
 - name: remove old galera
   package:
     name: galera
     state: absent
   tags: mariadb
-  when: mariadb_version_output.stdout is not search('10.4')
+  when: mariadb_version_output is not search('10.4')
 
 - name: remove old maria Centos 8
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: absent
   tags: mariadb
-  when: rhel_version == 8 and mariadb_version_output.stdout is not search('10.4')
-    
+  when: rhel_version == 8 and mariadb_version_output is not search('10.4')
+
 - name: Install packages
   package:
     name: "{{ item }}"
