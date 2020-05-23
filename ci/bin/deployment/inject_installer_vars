@@ -7,7 +7,7 @@ fi
 
 scripts_dir="./scripts"
 
-for i in "$scripts_dir/*.sh";
+for i in "$scripts_dir/*.sh"; do
     sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='${1}'/g" $i
     sed -i "s/^DEFAULT_PLAYBOOK_URL=.*/DEFAULT_PLAYBOOK_URL='${2}'/g" $i
 done
