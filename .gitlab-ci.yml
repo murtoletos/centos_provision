@@ -76,7 +76,7 @@ upload_build:
     - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
-    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PAYBOOK_URL}"
+    - "ci/bin/deployment/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
     - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
   allow_failure: false
