@@ -15,10 +15,11 @@ fi
 
 
 root_dir="."
-scriptsDir="$root_dir/scripts"
+scripts_dir="$root_dir/scripts"
 echo "Set current release to $RELEASE_VERSION"
-sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='$RELEASE_VERSION'/g" "$scriptsDir/src/shared/vars/common.sh"
-cd $scriptsDir
+sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='$RELEASE_VERSION'/g" "$scripts_dir/src/shared/vars/common.sh"
+
+cd $scripts_dir
 
 compile_template(){
   cp $1 $2

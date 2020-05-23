@@ -73,10 +73,12 @@ upload_build:
   tags: [docker]
   image: apliteni/mc
   script:
+    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
+    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
-    - "ci/bin/deployment/notify \"[Installer] File https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
+    - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
   allow_failure: false
   dependencies:
     - build_scripts
@@ -111,15 +113,10 @@ release!:
     - when: never
 
 # Post release jobs
-upload_as_latest:
+.post-release-common:
   stage: post_release
   tags: [docker]
   image: apliteni/mc
-  script:
-    - ci/bin/deployment/create_build
-    - ci/bin/deployment/prepare_mc
-    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
-    - "ci/bin/deployment/notify \"[Installer] File https://${S3_HOST}/${S3_BUCKET}/${LATEST_BUILD_PATH}/install.sh (${CI_COMMIT_SHORT_SHA}) has been updated.\""
   allow_failure: false
   dependencies:
     - build_scripts
@@ -136,6 +133,27 @@ upload_as_latest:
       when: always
     - when: never
 
+upload_as_release:
+  except: [.post-release-common]
+  script:
+    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}"
+    - ci/bin/deployment/create_build
+    - ci/bin/deployment/prepare_mc
+    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PAYBOOK_URL}"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
+    - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
+
+upload_as_latest:
+  except: [.post-release-common]
+  script:
+    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${LATEST_BUILD_PATH}"
+    - ci/bin/deployment/create_build
+    - ci/bin/deployment/prepare_mc
+    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${LATEST_BUILD_PATH}"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
+
+# Actions
 prune_files:
   stage: actions
   tags: [docker]

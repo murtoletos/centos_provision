@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+set -e -x -o pipefail
+
+if test "$#" -ne 2; then
+    echo "Usage: ./inject_installer_vars VERSION PLAYBK_URL"
+fi
+
+scripts_dir="./scripts"
+
+sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='${1}'/g" "$scripts_dir/install.sh"
+sed -i "s/^DEFAULT_PLAYBOOK_URL=.*/DEFAULT_PLAYBOOK_URL='${2}'/g" "$scripts_dir/install.sh"
+
+cd $scripts_dir

@@ -10,9 +10,9 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
-DEFAULT_BRANCH="master"
-BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
+RELEASE_VERSION='dev'
+BRANCH="${BRANCH:-master}"
+DEFAULT_PLAYBOOK_URL="https://files.keitaro.io/scripts/latest/playbook.zip"
 
 WEBROOT_PATH="/var/www/keitaro"
 

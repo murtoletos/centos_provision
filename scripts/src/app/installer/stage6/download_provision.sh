@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 download_provision(){
-  debug "Download provision"
-  release_url="https://github.com/apliteni/centos_provision/archive/${BRANCH}.tar.gz"
-  run_command "curl -fsSL ${release_url} | tar xz"
+  debug "Download playbook.zip"
+
+  url="${PLAYBOOK_URL:-DEFAULT_PLAYBOOK_URL}"
+  run_command "curl -fsSL ${url} && unzip -qo playbook.zip && ls"
 }
