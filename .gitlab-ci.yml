@@ -73,10 +73,10 @@ upload_build:
   tags: [docker]
   image: apliteni/mc
   script:
-    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
+    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
-    - "ci/bin/deployment/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PAYBOOK_URL}"
+    - "ci/bin/deployment/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PLAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
     - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
   allow_failure: false
@@ -136,10 +136,10 @@ release!:
 upload_as_release:
   extends: [.post-release-common]
   script:
-    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}"
+    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
-    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PAYBOOK_URL}"
+    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
     - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
@@ -147,10 +147,10 @@ upload_as_release:
 upload_as_latest:
   extends: [.post-release-common]
   script:
-    - export PAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${LATEST_BUILD_PATH}"
+    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${LATEST_BUILD_PATH}
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
-    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${LATEST_BUILD_PATH}"
+    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
 
 # Actions
