@@ -136,7 +136,7 @@ release!:
 upload_as_release:
   extends: [.post-release-common]
   script:
-    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}
+    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}"
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
     - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
