@@ -43,7 +43,7 @@
   tags: mariadb
   when: rhel_version == 8 and mariadb_version_output is not search('10.4')
 
-- name: Install packages
+- name: Install packages Centos 7
   package:
     name: "{{ item }}"
     state: installed
@@ -52,18 +52,10 @@
   tags: mariadb
   when: rhel_version == 7
 
-- name: Install packages step 1
-  dnf:
-    name: boost-program-options
-    state: installed
-  tags: mariadb
-  when: rhel_version == 8
-
-- name: Install packages step 2
+- name: Install packages Centos 8
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: installed
-    disablerepo: AppStream
   tags: mariadb
   when: rhel_version == 8
 
