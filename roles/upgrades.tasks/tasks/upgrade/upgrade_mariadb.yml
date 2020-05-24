@@ -52,12 +52,33 @@
   tags: mariadb
   when: rhel_version == 7
 
-- name: Install packages step 2
+- name: Install packages step 1
   dnf:
-    name: [MariaDB-server, MariaDB-client]
-    state: latest
+    name: boost-program-options
+    state: installed
   tags: mariadb
   when: rhel_version == 8
 
+- name: Install packages step 2
+  dnf:
+    name: [MariaDB-server, MariaDB-client]
+    state: installed
+    disablerepo: AppStream
+  tags: mariadb
+  when: rhel_version == 8
+
+- name: Update root password
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    login_unix_socket: "{{ mariadb_socket }}"
+    password: "{{ mariadb_root_password }}"
+    state: present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+  tags: mariadb
+  ignore_errors: yes
   
 
