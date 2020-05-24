@@ -52,17 +52,10 @@
   tags: mariadb
   when: rhel_version == 7
 
-- name: Install packages step 1
-  dnf:
-    name: boost-program-options
-    state: installed
-  tags: mariadb
-  when: rhel_version == 8
-
 - name: Install packages step 2
   dnf:
     name: [MariaDB-server, MariaDB-client]
-    state: installed
+    state: latest
   tags: mariadb
   when: rhel_version == 8
 
