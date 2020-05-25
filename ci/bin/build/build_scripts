@@ -14,7 +14,7 @@ then
 fi
 
 
-scripts_dir=
+scripts_dir="./scripts"
 
 cd $scripts_dir
 
@@ -28,4 +28,4 @@ compile_template src/installer.sh.tpl install.sh
 compile_template src/ssl_enabler.sh.tpl enable-ssl.sh
 compile_template src/site_adder.sh.tpl add-site.sh
 compile_template src/run_command_tester.sh.tpl test-run-command.sh
-echo -e "\e[32mCompile $RELEASE_VERSION version complete"
+echo -e "\e[32mComplete"

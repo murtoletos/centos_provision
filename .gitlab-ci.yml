@@ -103,9 +103,9 @@ release!:
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: manual
     - if: '$CI_COMMIT_REF_NAME == "INST-132"' # TODO!
-      when: always
+      when: on_success
     - if: '$ACTION == "build"'
-      when: always
+      when: on_success
     - when: never
 
 # Post release jobs
@@ -126,7 +126,7 @@ release!:
     - if: '$CI_COMMIT_REF_NAME == "INST-132"' # TODO!
       when: on_success
     - if: '$ACTION == "build"'
-      when: always
+      when: on_success
     - when: never
 
 upload_as_release:
