@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e -x -o pipefail
+
+if [[ "$#" -ne  1 ]]; then
+    echo "Usage: ./export_notification_text VERSION"
+    exit
+fi
+
+
+export PLAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${1}"
+
+export NOTIFICATION_TEXT="Installer ${PLAYBOOK_URL}/install.sh (${1}) has been uploaded.
+\\\`curl ${PLAYBOOK_URL}/install.sh > run && bash run -L ru\\\`
+"

@@ -26,16 +26,12 @@ build_scripts:
   stage: build
   interruptible: true
   script:
-    - ci/bin/build/compile
+    - ci/bin/build/build_scripts
     - ci/bin/testing/validate_scripts
   artifacts:
     expire_in: 1 hour
     paths:
-      - scripts/install.sh
-      - scripts/add-site.sh
-      - scripts/enable-ssl.sh
-      - scripts/fix-renewal-certs-cron-job.sh
-      - scripts/test-run-command.sh
+      - scripts/*.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
@@ -73,12 +69,12 @@ upload_build:
   tags: [docker]
   image: apliteni/mc
   script:
-    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
-    - "ci/bin/deployment/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PLAYBOOK_URL}"
-    - ci/bin/deployment/create_build
-    - ci/bin/deployment/prepare_mc
+    - "source ci/bin/deployment/export_deployment_envs ${CI_COMMIT_REF_NAME}"
+    - "ci/bin/build/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PLAYBOOK_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
-    - "ci/bin/deployment/notify \"Installer ${PLAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
+    - "ci/bin/notify ${NOTIFICATION_TEXT}"
   allow_failure: false
   dependencies:
     - build_scripts
@@ -94,8 +90,8 @@ release!:
   stage: release
   tags: [shell]
   script:
-    - ci/bin/deployment/allow_git_push
-    - ci/bin/deployment/tag_commit
+    - ci/bin/release/allow_git_push
+    - ci/bin/release/tag_commit
   allow_failure: false
   dependencies:
     - build_scripts
@@ -136,10 +132,10 @@ release!:
 upload_as_release:
   extends: [.post-release-common]
   script:
-    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${RELEASE_VERSION}"
-    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
-    - ci/bin/deployment/create_build
-    - ci/bin/deployment/prepare_mc
+    - "source ci/bin/deployment/export_deployment_envs ${RELEASE_VERSION}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
     - "ci/bin/deployment/notify \"Installer ${PLAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
@@ -147,10 +143,10 @@ upload_as_release:
 upload_as_latest:
   extends: [.post-release-common]
   script:
-    - "export PLAYBOOK_URL=https://${S3_HOST}/${S3_BUCKET}/${LATEST_BUILD_PATH}"
-    - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
-    - ci/bin/deployment/create_build
-    - ci/bin/deployment/prepare_mc
+    - "source ci/bin/deployment/export_deployment_envs ${LATEST_BUILD_PATH}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
 
 # Actions
@@ -161,7 +157,7 @@ prune_files:
   allow_failure: false
   script:
     - ci/bin/prepare_old_files
-    - "ci/bin/prune ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
+    - "ci/bin/maintenance/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
   only:
     variables:
       - $ACTION == 'prune'
