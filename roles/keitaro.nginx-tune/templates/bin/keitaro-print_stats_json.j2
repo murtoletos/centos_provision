@@ -44,7 +44,7 @@ print_json() {
 }
 
 versions_json() {
-  current_installer_version="$(curl -fsSL {{ $(get_config_var 'latest_version_url') }})"
+  current_installer_version="$(curl -fsSL $(get_config_var 'latest_version_url') )"
   print_json installer "\"$(get_config_var 'installer_version')\"" \
              current_installer "\"${current_installer_version}\"" \
              php "\"$(php_version)\"" \
