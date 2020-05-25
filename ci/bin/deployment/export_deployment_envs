@@ -3,7 +3,7 @@ set -e -x -o pipefail
 
 if [[ "$#" -ne  1 ]]; then
     echo "Usage: ./export_notification_text VERSION"
-    exit
+    exit 1
 fi
 
 

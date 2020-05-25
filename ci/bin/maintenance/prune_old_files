@@ -3,6 +3,7 @@ set -e -x -o pipefail
 
 if test "$#" -ne 1; then
     echo "Usage: ./notify TEXT"
+    exit 1
 fi
 
 if [[ -z "$SLACK_WEBHOOK" ]]
