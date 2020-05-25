@@ -69,7 +69,7 @@ upload_build:
   tags: [docker]
   image: apliteni/mc
   script:
-    - "source ci/bin/deployment/export_deployment_envs ${CI_COMMIT_REF_NAME}"
+    - "source ci/bin/deployment/export_deployment_envs ${CI_COMMIT_REF_NAME} builds/${CI_COMMIT_REF_NAME}"
     - "ci/bin/build/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PLAYBOOK_URL}"
     - "ci/bin/build/pack"
     - "ci/bin/deployment/prepare_mc"
@@ -132,7 +132,7 @@ release!:
 upload_as_release:
   extends: [.post-release-common]
   script:
-    - "source ci/bin/deployment/export_deployment_envs ${RELEASE_VERSION}"
+    - "source ci/bin/deployment/export_deployment_envs ${RELEASE_VERSION} ${RELEASE_VERSION}"
     - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
     - "ci/bin/build/pack"
     - "ci/bin/deployment/prepare_mc"
