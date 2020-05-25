@@ -8,4 +8,4 @@ mkdir -p "${LOCAL_BUILD_PATH}"
 cp scripts/*.sh "${LOCAL_BUILD_PATH}"
 cp RELEASE_VERSION "${LOCAL_BUILD_PATH}/VERSION"
 
-zip -r "${LOCAL_BUILD_PATH}/playbook.zip" roles **/*.yml *.cfg *.txt
+zip -r "${LOCAL_BUILD_PATH}/playbook.zip" roles **/*.yml *.cfg *.txt *.yml
