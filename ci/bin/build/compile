@@ -14,10 +14,7 @@ then
 fi
 
 
-root_dir="."
-scripts_dir="$root_dir/scripts"
-echo "Set current release to $RELEASE_VERSION"
-sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='$RELEASE_VERSION'/g" "$scripts_dir/src/shared/vars/common.sh"
+scripts_dir=
 
 cd $scripts_dir
 
