@@ -1,4 +1,4 @@
-- name: set variable
+- name: set mariadb version to variable
   shell: mysql --version
   register: mysql_version
 - set_fact:
