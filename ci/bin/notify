@@ -12,6 +12,5 @@ then
 fi
 
 
-text=`tr '`' "\\\`" <<< ${1}`
-
-curl --fail "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${text}\"}" -H 'Content-type: application/json'
+text=${1//\`/\`}
+curl "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${text}\"}" -H 'Content-type: application/json' --fail
