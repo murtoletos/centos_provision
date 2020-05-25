@@ -11,4 +11,10 @@ then
       exit 1;
 fi
 
-curl "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${1}\"}" -H 'Content-type: application/json'
+json_escape () {
+    printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
+}
+
+text=`json_escape ${1}`
+
+curl "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${text}\"}" -H 'Content-type: application/json'
