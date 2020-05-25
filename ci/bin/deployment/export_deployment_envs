@@ -10,5 +10,5 @@ fi
 export PLAYBOOK_URL="https://${S3_HOST}/${S3_BUCKET}/${2}/playbook.zip"
 
 export NOTIFICATION_TEXT="Installer ${PLAYBOOK_URL}/install.sh (${1}) has been uploaded.
-\\\`curl ${PLAYBOOK_URL}/install.sh > run && bash run -L ru\\\`
+\`curl ${PLAYBOOK_URL}/install.sh > run && bash run -L ru\`
 "
