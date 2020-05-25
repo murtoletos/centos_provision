@@ -13,6 +13,7 @@ KEITARO_URL="https://keitaro.io"
 RELEASE_VERSION='dev'
 BRANCH="${BRANCH:-master}"
 DEFAULT_PLAYBOOK_URL="https://files.keitaro.io/scripts/latest/playbook.zip"
+LATEST_RELEASE_VERSION_URL="https://files.keitaro.io/scripts/latest/VERSION"
 
 WEBROOT_PATH="/var/www/keitaro"
 

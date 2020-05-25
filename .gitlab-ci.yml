@@ -9,7 +9,7 @@ variables:
   REMOTE_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_REF_NAME}"
   NIGHTLY_BUILD_PATH: "builds/${CI_COMMIT_REF_NAME}"
   LATEST_BUILD_PATH: "latest"
-  BUILDS_TTL: 7d
+  BUILDS_TTL: 5d
 
 # Stages
 stages:
