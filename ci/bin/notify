@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e -x -o pipefail
+
+if test "$#" -ne 1; then
+    echo "Usage: ./notify TEXT"
+fi
+
+if [[ -z "$SLACK_WEBHOOK" ]]
+then
+      echo "\$SLACK_WEBHOOK is empty";
+      exit 1;
+fi
+
+curl "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${1}\"}" -H 'Content-type: application/json'

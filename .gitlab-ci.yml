@@ -138,7 +138,7 @@ upload_as_release:
     - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
-    - "ci/bin/deployment/notify \"Installer ${PLAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
+    - "ci/bin/notify \"Installer ${PLAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
 
 upload_as_latest:
   extends: [.post-release-common]
