@@ -29,6 +29,7 @@ write_inventory_file(){
   print_line_to_inventory_file "ram=$(get_ram)"
   print_line_to_inventory_file "ssh_port=${VARS['ssh_port']}"
   print_line_to_inventory_file "rhel_version=${VARS['rhel_version']}"
+  print_line_to_inventory_file "latest_version_url=${LATEST_RELEASE_VERSION_URL}"
   if isset "${VARS['db_engine']}"; then
     print_line_to_inventory_file "db_engine=${VARS['db_engine']}"
   fi
