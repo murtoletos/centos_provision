@@ -15,7 +15,7 @@
     - selinux
 
 - name: Get older backups list
-  shell: "ls {{ keitaro_backups }} | head -n-{{ backups_amount + 1 }}"
+  shell: "ls {{ keitaro_backups }} | head -n-{{ keitaro_backups_amount + 1 }}"
   register: list_dirеctories_result
 
 - name: Remove older backups
