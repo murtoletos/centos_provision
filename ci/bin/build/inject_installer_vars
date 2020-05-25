@@ -2,7 +2,7 @@
 set -e -x -o pipefail
 
 if test "$#" -ne 2; then
-    echo "Usage: ./inject_installer_vars VERSION PLAYBOOK_URL"
+    echo "Usage: ./inject_installer_vars VERSION BUILD_URL"
 fi
 
 scripts_dir="./scripts"
@@ -10,5 +10,5 @@ files="$scripts_dir/*.sh"
 
 for i in $files; do
     sed -i.bak "s/^RELEASE_VERSION=.*/RELEASE_VERSION=${1}/g" "$i"
-    sed -i.bak "s,^DEFAULT_PLAYBOOK_URL=.*,DEFAULT_PLAYBOOK_URL=\"${2}\",g" "$i"
+    sed -i.bak "s,^DEFAULT_PLAYBOOK_URL=.*,DEFAULT_PLAYBOOK_URL=\"${2}/playbook.zip\",g" "$i"
 done

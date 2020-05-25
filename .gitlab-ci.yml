@@ -70,7 +70,7 @@ upload_build:
   image: apliteni/mc
   script:
     - "source ci/bin/deployment/export_deployment_envs ${CI_COMMIT_REF_NAME} builds/${CI_COMMIT_REF_NAME}"
-    - "ci/bin/build/inject_installer_vars ${CI_COMMIT_REF_NAME} ${PLAYBOOK_URL}"
+    - "ci/bin/build/inject_installer_vars ${CI_COMMIT_REF_NAME} ${BUILD_URL}"
     - "ci/bin/build/pack"
     - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
@@ -133,7 +133,7 @@ upload_as_release:
   extends: [.post-release-common]
   script:
     - "source ci/bin/deployment/export_deployment_envs ${RELEASE_VERSION} ${RELEASE_VERSION}"
-    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${BUILD_URL}"
     - "ci/bin/build/pack"
     - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
@@ -144,7 +144,7 @@ upload_as_latest:
   extends: [.post-release-common]
   script:
     - "source ci/bin/deployment/export_deployment_envs ${LATEST_BUILD_PATH}"
-    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${BUILD_URL}"
     - "ci/bin/build/pack"
     - "ci/bin/deployment/prepare_mc"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
