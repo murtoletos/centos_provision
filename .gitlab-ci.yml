@@ -142,7 +142,7 @@ upload_as_release:
     - "ci/bin/deployment/inject_installer_vars ${RELEASE_VERSION} ${PLAYBOOK_URL}"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
     - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
-    - "ci/bin/deployment/notify \"Installer ${PAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
+    - "ci/bin/deployment/notify \"Installer ${PLAYBOOK_URL}/install.sh (${CI_COMMIT_SHORT_SHA}) has been uploaded.\""
 
 upload_as_latest:
   extends: [.post-release-common]
@@ -160,7 +160,7 @@ prune_files:
   image: apliteni/mc
   allow_failure: false
   script:
-    - ci/bin/prepare_mc
+    - ci/bin/prepare_old_files
     - "ci/bin/prune ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
   only:
     variables:
