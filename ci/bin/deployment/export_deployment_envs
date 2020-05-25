@@ -7,7 +7,7 @@ if [[ "$#" -ne  2 ]]; then
 fi
 
 
-export BUILD_URL="https://${S3_HOST}/${S3_BUCKET}/${2}/"
+export BUILD_URL="https://${S3_HOST}/${S3_BUCKET}/${2}"
 
 export NOTIFICATION_TEXT="Installer ${BUILD_URL}/install.sh (${1}) has been uploaded.
 \`curl ${BUILD_URL}/install.sh > run && bash run -L ru\`
