@@ -66,21 +66,3 @@
     disablerepo: AppStream
   tags: mariadb
   when: rhel_version == 8
-  
-- name: Install TokuDB Engine
-  package:
-    name: MariaDB-tokudb-engine
-    state: installed
-    enablerepo: mariadb
-  when: rhel_version == 7
-
-- name: Install TokuDB Engine Centos 8
-  yum:
-    name: "{{ tokudb_engine }}"
-    state: installed
-  when: rhel_version == 8
-
-- name: Restart MariaDB service
-  service:
-    name: mariadb
-    state: restarted  

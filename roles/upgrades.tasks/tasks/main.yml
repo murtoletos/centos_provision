@@ -1,5 +1,8 @@
 - include: upgrade/upgrade_mariadb.yml
   tags: 'upgrade'
+  
+- include: upgrade/upgrade_tokudb.yml
+  tags: 'upgrade'  
 
 - include: upgrade/upgrade_nginx.yml
   notify:
