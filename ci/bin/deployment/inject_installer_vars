@@ -10,5 +10,5 @@ files="$scripts_dir/*.sh"
 
 for i in $files; do
     sed -i.bak "s/^RELEASE_VERSION=.*/RELEASE_VERSION=${1}/g" "$i"
-    sed -i.bak "s,^DEFAULT_PLAYBOOK_URL=.*,DEFAULT_PLAYBOOK_URL='${2}',g" "$i"
+    sed -i.bak "s,^DEFAULT_PLAYBOOK_URL=.*,DEFAULT_PLAYBOOK_URL=\"${2}\",g" "$i"
 done
