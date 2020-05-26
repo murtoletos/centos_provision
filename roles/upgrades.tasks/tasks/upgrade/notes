@@ -1,0 +1,18 @@
+1. вынести mariadb_version: 10.4 в vars/mariadb.yml
+2. убрать из upgrades.tasks/tasks/upgrade/upgrade_mariadb.yml
+  *  `include_vars: "{{ item }}"`
+3. удалить upgrades.tasks/vars
+4. перенести из upgrades.tasks/tasks/upgrade/upgrade_mariadb.yml в upgrades.pretasks/tasks/upgrade/prepare_mariadb.yml
+  * `name: set mariadb version to variable`
+  * `set_fact`, устанавливать переменную need_upgrade_mariadb как
+   "{{ mysql_version_output.stdout is not search('Distrib ' + mariadb_version + '.') }}"
+5. создать upgrades.pretasks/tasks/upgrade/cleanup_mariadb.yml
+   подключать его из prepare_mariadb.yml если need_upgrade_mariadb
+   перенести remove* таски из upgrade_mariadb.yml в cleanup_mariadb.yml
+
+6. убрать все `Install packages` из `upgrade_mariadb.yml` - он теперь должен быть пустым, и его можно наверное
+удалить (поправить main.yml)
+
+7. в cleanup_mariadb.yml добавить
+  * удаление /etc/my.cnf.d/network.cnf
+
