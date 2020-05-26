@@ -26,8 +26,8 @@
     - {role: 'keitaro.mail', tags: 'mail, upgrade'}
     - {role: 'keitaro.redis', tags: 'redis'}
     - {role: 'keitaro.redis-tune', tags: 'redis, tune, redis-tune, upgrade'}
-    - {role: 'bertvv.mariadb', tags: 'mariadb, upgrade'}
-    - {role: 'keitaro.mariadb-install_tokudb', tags: 'mariadb, tokudb, upgrade'}
+    - {role: 'bertvv.mariadb', tags: 'mariadb'}
+    - {role: 'keitaro.mariadb-install_tokudb', tags: 'mariadb, tokudb'}
     - {role: 'keitaro.mariadb-tune', tags: 'mariadb, tokudb, tune, mariadb-tune, upgrade'}
     - {role: 'keitaro.nginx', tags: 'nginx'}
     - {role: 'keitaro.nginx-tune', tags: 'nginx, tune, nginx-tune, upgrade'}
@@ -39,4 +39,4 @@
     - {role: 'keitaro.php-fpm-tune', tags: 'php, php-fpm, tune, php-fpm-tune, upgrade'}
     - {role: 'keitaro.roadrunner', tags: 'php, roadrunner, upgrade'}
     - {role: 'keitaro.roadrunner-tune', tags: 'php, roadrunner, tune, roadrunner-tune, upgrade'}
-    - {role: 'upgrades.tasks', tags: 'never, upgrade, upgrade-tracker, upgrade-php, upgrade-nginx' }
+    - {role: 'upgrades.tasks', tags: 'never, upgrade, upgrade-tracker, upgrade-php, upgrade-nginx, upgrade-mariadb' }
