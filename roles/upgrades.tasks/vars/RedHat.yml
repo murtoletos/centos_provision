@@ -8,9 +8,6 @@ mariadb_packages:
 
 mariadb_service: mariadb
 
-mariadb_config: /etc/my.cnf.d/network.cnf
-mariadb_my_config: ~/.my.cnf
-
 mariadb_version: 10.4
 tokudb_engine: "https://yum.mariadb.org/{{ mariadb_version }}/rhel8-amd64/rpms/MariaDB-tokudb-engine-{{ tokudb_version }}-1.el8.x86_64.rpm"
 
