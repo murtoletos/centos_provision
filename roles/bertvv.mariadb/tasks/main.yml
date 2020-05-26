@@ -22,7 +22,7 @@
 - name: Install packages
   package:
     name: "{{ item }}"
-    state: installed
+    state: latest
     enablerepo: mariadb
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
@@ -31,14 +31,14 @@
 - name: Install packages step 1
   dnf:
     name: boost-program-options
-    state: installed
+    state: latest
   tags: mariadb
   when: rhel_version == 8
 
 - name: Install packages step 2
   dnf:
     name: [MariaDB-server, MariaDB-client]
-    state: installed
+    state: latest
     disablerepo: AppStream
   tags: mariadb
   when: rhel_version == 8
