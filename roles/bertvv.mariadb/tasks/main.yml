@@ -11,58 +11,24 @@
   template:
     src: mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 7
-
-- name: Add MariaDB repo
-  template:
-    src: mariadb.centos8.repo.j2
-    dest: /etc/yum.repos.d/mariadb.repo
-  when: rhel_version == 8
 
 - name: Install packages
-  package:
-    name: "{{ mariadb_packages }}"
-    state: latest
-    enablerepo: mariadb
-  tags: mariadb
-  when: rhel_version == 7
-
-- name: Install packages step 1
-  dnf:
-    name: boost-program-options
-    state: latest
-  tags: mariadb
-  when: rhel_version == 8
-
-- name: Install packages step 2
   dnf:
     name: "{{ mariadb_packages }}"
     state: latest
-    disablerepo: AppStream
-  tags: mariadb
-  when: rhel_version == 8
-
-- name: Make sure pymysql is present
-  become: true # needed if the other tasks are not played as root
-  pip:
-    name: pymysql
-    state: present
-  tags: mariadb
-  when: rhel_version == 8
+  notify: restart mariadb
 
 - name: Ensure service is started
   service:
     name: "{{ mariadb_service }}"
     state: started
     enabled: yes
-  tags: mariadb
 
 - name: Install config file for network settings
   template:
     src: etc_my.cnf.d_network.cnf.j2
     dest: "{{ mariadb_config }}"
   notify: restart mariadb
-  tags: mariadb
 
 - name: Update root password
   mysql_user:

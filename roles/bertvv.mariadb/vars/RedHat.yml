@@ -4,8 +4,8 @@
 mariadb_packages:
   - MariaDB
   - MariaDB-server
+  - MariaDB-tokudb-engine
   - MySQL-python
-  - galera
 
 mariadb_service: mariadb
 
