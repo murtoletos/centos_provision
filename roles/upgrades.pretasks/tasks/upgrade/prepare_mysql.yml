@@ -33,4 +33,3 @@
   set_fact:
     db_engine: "{{ detected_db_engine.stdout | trim }}"
   when: db_engine is not defined
-
