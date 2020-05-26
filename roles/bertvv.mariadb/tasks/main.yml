@@ -21,10 +21,9 @@
 
 - name: Install packages
   package:
-    name: "{{ item }}"
+    name: "{{ mariadb_packages }}"
     state: latest
     enablerepo: mariadb
-  with_items: "{{ mariadb_packages }}"
   tags: mariadb
   when: rhel_version == 7
 
@@ -37,7 +36,7 @@
 
 - name: Install packages step 2
   dnf:
-    name: [MariaDB-server, MariaDB-client]
+    name: "{{ mariadb_packages }}"
     state: latest
     disablerepo: AppStream
   tags: mariadb

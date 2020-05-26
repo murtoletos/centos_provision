@@ -5,6 +5,7 @@ mariadb_packages:
   - MariaDB
   - MariaDB-server
   - MySQL-python
+  - galera
 
 mariadb_service: mariadb
 
