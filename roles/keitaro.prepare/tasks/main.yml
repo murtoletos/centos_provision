@@ -1,5 +1,7 @@
 - include: create_user.yml
 
+- include: install_keitaroctl_tools.yml
+
 - include: install_tools.yml
 
 - include: install_cronie.yml

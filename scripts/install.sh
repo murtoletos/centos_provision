@@ -51,7 +51,7 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
+RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
@@ -83,11 +83,23 @@ CURRENT_COMMAND_SCRIPT_NAME="current_command.sh"
 INDENTATION_LENGTH=2
 INDENTATION_SPACES=$(printf "%${INDENTATION_LENGTH}s")
 
-if ! empty ${@}; then
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
-  TOOL_ARGS="${@}"
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
+
+if [[ "${TOOL_NAME}" == "install" ]]; then
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  fi
 else
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME} ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME}"
+  fi
 fi
 
 declare -A VARS
@@ -1271,7 +1283,7 @@ DICT['en.messages.check_keitaro_dump_validity']="Checking SQL dump"
 DICT['en.messages.successful.use_old_credentials']="The database was successfully restored from the archive. Use old login data"
 DICT['en.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	You can install free SSL certificates with the following command
-	curl keitaro.io/enable-ssl.sh > run; bash run -D domain1.com,domain2.com
+	keitaroctl-enable-ssl -D domain1.com,domain2.com
 END
 )
 DICT['en.errors.see_logs']=$(cat <<- END
@@ -1320,7 +1332,7 @@ DICT['ru.messages.check_keitaro_dump_validity']="Проверяем SQL дамп
 DICT["ru.messages.successful.use_old_credentials"]="База данных успешно восстановлена из архива. Используйте старые данные для входа в систему"
 DICT['ru.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	Вы можете установить бесплатные SSL сертификаты, выполнив следующую команду:
-	curl keitaro.io/enable-ssl.sh > run; bash run -D domain1.com,domain2.com
+	keitaroctl-enable-ssl -D domain1.com,domain2.com -L ru
 END
 )
 DICT['ru.errors.see_logs']=$(cat <<- END
@@ -2356,7 +2368,7 @@ json2dict() {
 
 install(){
   init "$@"
-  stage1 "$@"                 # initial script setup
+  stage1 "$@"               # initial script setup
   stage2                    # make some asserts
   stage3                    # read vars from the inventory file
   if isset "$RECONFIGURE"; then

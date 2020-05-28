@@ -102,7 +102,7 @@ _require 'app/installer/stage6/json2dict.sh'
 
 install(){
   init "$@"
-  stage1 "$@"                 # initial script setup
+  stage1 "$@"               # initial script setup
   stage2                    # make some asserts
   stage3                    # read vars from the inventory file
   if isset "$RECONFIGURE"; then

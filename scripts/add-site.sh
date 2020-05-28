@@ -50,7 +50,7 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
+RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
@@ -82,11 +82,23 @@ CURRENT_COMMAND_SCRIPT_NAME="current_command.sh"
 INDENTATION_LENGTH=2
 INDENTATION_SPACES=$(printf "%${INDENTATION_LENGTH}s")
 
-if ! empty ${@}; then
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
-  TOOL_ARGS="${@}"
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
+
+if [[ "${TOOL_NAME}" == "install" ]]; then
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  fi
 else
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME} ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME}"
+  fi
 fi
 
 declare -A VARS
