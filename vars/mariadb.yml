@@ -5,4 +5,11 @@ mariadb_users:
   - name: "{{ db_user }}"
     password: "{{ db_password }}"
     priv: "{{ db_name }}.*:ALL,GRANT"
+mariadb_packages:
+  - MariaDB
+  - MariaDB-server
+  - MySQL-python
 
+mariadb_service: mariadb
+
+mariadb_version: 10.4
