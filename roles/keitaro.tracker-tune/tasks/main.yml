@@ -4,7 +4,7 @@
     name: "keitaro cron (channel {{ item }})"
     job: "CHANNEL={{ item }} {{ php_path }} {{ keitaro_root }}/cron.php"
   loop: [1, 2, 3, 4]
-    
+
 - name: Configure cron to update geo databases every week
   cron:
     user: "{{ keitaro_user }}"
