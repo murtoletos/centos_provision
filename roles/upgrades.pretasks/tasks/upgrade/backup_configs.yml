@@ -5,7 +5,7 @@
     state: directory
 
 - name: Backup configs
-  shell: test -e "/etc/{{item}}" && cp -R /etc/{{ item }} "{{ keitaro_backup_dir }}/{{ item }}"
+  shell: test -e /etc/{{item}} && cp -R /etc/{{ item }} {{ keitaro_backup_dir }}/{{ item }}
   with_items:
     - letsencrypt
     - logrotate.d
@@ -15,11 +15,11 @@
     - selinux
 
 - name: Get older backups list
-  shell: "ls {{ keitaro_backups }} | head -n-{{ keitaro_backups_amount + 1 }}"
-  register: list_dirеctories_result
+  shell: "ls {{ keitaro_backups }} | head -n -{{ keitaro_backups_amount }}"
+  register: list_backup_directories_result
 
 - name: Remove older backups
   file:
     path: "{{ item }}"
     state: absent
-  with_items: "{{ list_dirеctories_result.stdout_lines }}"
+  with_items: "{{ list_backup_directories_result.stdout_lines }}"
