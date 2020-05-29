@@ -6,8 +6,6 @@
 
 - include: install_cronie.yml
 
-- include: install_sudo.yml
-
 - include: prepare_home.yml
 
 - include: prepare_ssl.yml
