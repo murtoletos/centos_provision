@@ -33,6 +33,7 @@ _require 'lib/io/read_stdin.sh'
 _require 'lib/install/install_package.sh'
 _require 'lib/install/is_installed.sh'
 _require 'lib/inventory/detect_inventory_path.sh'
+_require 'lib/system/init_dirs.sh'
 _require 'lib/system/debug.sh'
 _require 'lib/system/fail.sh'
 _require 'lib/system/help_and_usage.sh'
@@ -101,6 +102,7 @@ _require 'app/installer/stage6/json2dict.sh'
 #   http://blog.existentialize.com/dont-pipe-to-your-shell.html
 
 install(){
+  init_keitaroctl
   init "$@"
   stage1 "$@"               # initial script setup
   stage2                    # make some asserts

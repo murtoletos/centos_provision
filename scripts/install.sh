@@ -55,7 +55,7 @@ RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBROOT_PATH="/var/www/keitaro"
+WEBAPP_ROOT="/var/www/keitaro"
 
 if [[ "$EUID" == "$ROOT_UID" ]]; then
   WORKING_DIR="${HOME}/.keitaro"
@@ -68,8 +68,8 @@ fi
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
-NGINX_ROOT_PATH="/etc/nginx"
-NGINX_VHOSTS_DIR="${NGINX_ROOT_PATH}/conf.d"
+NGINX_CONFIG_ROOT="/etc/nginx"
+NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="${TOOL_NAME}.sh"
@@ -177,7 +177,7 @@ assert_installed(){
 }
 
 USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.13"
-KEITARO_LOCK_FILEPATH="${WEBROOT_PATH}/var/install.lock"
+KEITARO_LOCK_FILEPATH="${WEBAPP_ROOT}/var/install.lock"
 
 assert_keitaro_not_installed(){
   debug 'Ensure keitaro is not installed yet'
@@ -1423,8 +1423,8 @@ reset_vars_on_reconfiguration(){
 
 detect_inventory_variables(){
   if empty "${VARS['license_key']}"; then
-    if [[ -f ${WEBROOT_PATH}/var/license/key.lic ]]; then
-      VARS['license_key']="$(cat ${WEBROOT_PATH}/var/license/key.lic)"
+    if [[ -f ${WEBAPP_ROOT}/var/license/key.lic ]]; then
+      VARS['license_key']="$(cat ${WEBAPP_ROOT}/var/license/key.lic)"
       debug "Detected license key: ${VARS['license_key']}"
     fi
   fi
@@ -1452,7 +1452,7 @@ detect_inventory_variables(){
 
 get_var_from_keitaro_app_config(){
   local var="${1}"
-  get_var_from_config "${var}" "${WEBROOT_PATH}/application/config/config.ini.php" '='
+  get_var_from_config "${var}" "${WEBAPP_ROOT}/application/config/config.ini.php" '='
 }
 
 

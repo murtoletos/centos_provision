@@ -14,11 +14,20 @@ RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBROOT_PATH="/var/www/keitaro"
+WEBAPP_ROOT="/var/www/keitaro"
+
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
+KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
+KEITAROCTL_CONFIG_DIR="${KEITAROCTL_ROOT}/config"
+KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
+
+ETC_DIR=/etc/keitaro
+LOG_DIR=/var/log/keitaro
 
 if [[ "$EUID" == "$ROOT_UID" ]]; then
-  WORKING_DIR="${HOME}/.keitaro"
-  INVENTORY_DIR="/etc/keitaro/config"
+  WORKING_DIR=/var/tmp/keitaro
+  INVENTORY_DIR="${ETC_DIR}/config"
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
@@ -27,12 +36,11 @@ fi
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
-NGINX_ROOT_PATH="/etc/nginx"
-NGINX_VHOSTS_DIR="${NGINX_ROOT_PATH}/conf.d"
+NGINX_CONFIG_ROOT="/etc/nginx"
+NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
-SCRIPT_NAME="${TOOL_NAME}.sh"
-SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
+SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
 SCRIPT_LOG="${TOOL_NAME}.log"
 
 CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
@@ -46,6 +54,7 @@ KEITAROCTL_ROOT="/opt/keitaro"
 KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
 
 if [[ "${TOOL_NAME}" == "install" ]]; then
+  SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
   if ! empty ${@}; then
     SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
     TOOL_ARGS="${@}"
@@ -54,10 +63,10 @@ if [[ "${TOOL_NAME}" == "install" ]]; then
   fi
 else
   if ! empty ${@}; then
-    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME} ${@}"
+    SCRIPT_COMMAND="${SCRIPT_NAME} ${@}"
     TOOL_ARGS="${@}"
   else
-    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME}"
+    SCRIPT_COMMAND="${SCRIPT_NAME}"
   fi
 fi
 

@@ -54,7 +54,7 @@ RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBROOT_PATH="/var/www/keitaro"
+WEBAPP_ROOT="/var/www/keitaro"
 
 if [[ "$EUID" == "$ROOT_UID" ]]; then
   WORKING_DIR="${HOME}/.keitaro"
@@ -67,8 +67,8 @@ fi
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
-NGINX_ROOT_PATH="/etc/nginx"
-NGINX_VHOSTS_DIR="${NGINX_ROOT_PATH}/conf.d"
+NGINX_CONFIG_ROOT="/etc/nginx"
+NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="${TOOL_NAME}.sh"
@@ -1382,7 +1382,7 @@ certificate_exists_for_domain(){
 request_certificate_for(){
   local domain="${1}"
   debug "Requesting certificate for domain ${domain}"
-  certbot_command="certbot certonly --webroot --webroot-path=${WEBROOT_PATH}"
+  certbot_command="certbot certonly --webroot --webroot-path=${WEBAPP_ROOT}"
   certbot_command="${certbot_command} --agree-tos --non-interactive"
   certbot_command="${certbot_command} --domain ${domain}"
   if isset "${VARS['ssl_email']}"; then
