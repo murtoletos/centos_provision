@@ -164,9 +164,12 @@ assert_installed(){
   fi
 }
 
+USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.13"
+KEITARO_LOCK_FILEPATH="${WEBROOT_PATH}/var/install.lock"
+
 assert_keitaro_not_installed(){
   debug 'Ensure keitaro is not installed yet'
-  if is_file_exist ${WEBROOT_PATH}/var/install.lock no; then
+  if is_keitaro_installed; then
     debug 'NOK: keitaro is already installed'
     print_err "$(translate messages.keitaro_already_installed)" 'yellow'
     show_credentials
@@ -175,6 +178,20 @@ assert_keitaro_not_installed(){
   else
     debug 'OK: keitaro is not installed yet'
   fi
+}
+
+is_keitaro_installed() {
+   if should_use_new_algorithm_for_installation_check; then
+     debug "Current version is ${RELEASE_VERSION} - using new algorithm (check flag in the inventory file)"
+     isset "${VARS['installed']}"
+   else
+     debug "Current version is ${RELEASE_VERSION} - using old algorithm (check '${KEITARO_LOCK_FILEPATH}' file)"
+     is_file_exist "${KEITARO_LOCK_FILEPATH}" no
+   fi
+}
+
+should_use_new_algorithm_for_installation_check() {
+ [[ ! $(version_to_number ${RELEASE_VERSION}) < $(version_to_number ${USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE}) ]]
 }
 #
 
@@ -231,6 +248,27 @@ detect_installed_version(){
     version="0.9"
   fi
   echo "$version"
+}
+
+# Based on https://stackoverflow.com/a/53400482/612799
+#
+# Use:
+#   (( $(version_to_number 1.2.3.4) >= $(version_to_number 1.2.3.3) )) && echo "yes" || echo "no"
+#
+# Version number should not contain more than 4 parts (3 dots) and each part should not contain more than 3 digits
+#
+version_to_number() {
+  local version="${1}"
+  local dots="${version//[^.]}"
+  if [[ ${#dots} > 3 ]]; then
+    debug "Version number '${version}' has more than 3 dots"
+    fail "Internal error - wrong version format"
+  fi
+  if [[ "${version}" =~ [[:digit:]]{4,} ]]; then
+    debug "Version number '${version}' some part has more than 3 digits"
+    fail "Internal error - wrong version format"
+  fi
+  printf "%03d%03d%03d%03d" ${version//./ }
 }
 #
 
@@ -446,11 +484,6 @@ debug(){
   local message="${1}"
   echo "$message" >> "$SCRIPT_LOG"
 }
-#
-
-
-
-
 
 fail(){
   local message="${1}"
@@ -1590,11 +1623,6 @@ help_en(){
   print_err "  -k RELEASE               set Keitaro release, 8 and 9 are only valid values"
   print_err
 }
-#
-
-
-
-
 
 setup_vars(){
   setup_default_value skip_firewall no
@@ -1643,11 +1671,11 @@ setup_default_value(){
   fi
 }
 
-
 generate_password(){
   local PASSWORD_LENGTH=16
   LC_ALL=C tr -cd '[:alnum:]' < /dev/urandom | head -c${PASSWORD_LENGTH}
 }
+
 stage2(){
   debug "Starting stage 2: make some asserts"
   assert_caller_root
@@ -1745,11 +1773,6 @@ assert_has_enough_ram(){
     fi
   fi
 }
-#
-
-
-
-
 
 stage3(){
   debug "Starting stage 3: read values from inventory file"
@@ -1777,7 +1800,6 @@ parse_inventory(){
   done < "${file}"
 }
 
-
 parse_line_from_inventory_file(){
   local line="${1}"
   IFS="=" read var_name value <<< "$line"
@@ -1796,11 +1818,6 @@ upgrade_packages(){
   debug "Upgrading packages"
   run_command "yum update -y"
 }
-#
-
-
-
-
 
 stage4(){
   debug "Starting stage 4: generate inventory file"
@@ -1900,6 +1917,9 @@ write_inventory_file(){
   if isset "$CUSTOM_PACKAGE"; then
     print_line_to_inventory_file "custom_package=$CUSTOM_PACKAGE"
   fi
+  if isset "${VARS['installed']}"; then
+    print_line_to_inventory_file "installed=${VARS['installed']}"
+  fi
   debug "Writing inventory file: DONE"
 }
 
@@ -1921,12 +1941,12 @@ print_line_to_inventory_file(){
   debug "  "$line""
   echo "$line" >> "$INVENTORY_PATH"
 }
+
 stage5(){
   debug "Starting stage 5: upgrade current and install necessary packages"
   upgrade_packages
   install_packages
 }
-
 
 upgrade_packages(){
   if isset "${VARS['rhel_version']}" && [ "${VARS['rhel_version']}" == "7" ]; then
@@ -1935,7 +1955,6 @@ upgrade_packages(){
   debug "Upgrading packages"
   run_command "yum update -y"
 }
-
 
 install_packages(){
   if ! is_installed tar; then
@@ -1951,17 +1970,13 @@ install_packages(){
     fi
   fi
 }
-#
-
-
-
-
 
 stage6(){
   debug "Starting stage 6: run ansible playbook"
   download_provision
   run_ansible_playbook
   clean_up
+  signal_successful_installation
   show_successful_message
   if isset "$ANSIBLE_TAGS"; then
     debug 'ansible tags is set to ${ANSIBLE_TAGS} - skip printing credentials'
@@ -1970,6 +1985,11 @@ stage6(){
   fi
 }
 
+signal_successful_installation() {
+  debug "Signaling successful installation by writing 'installed' flag to the inventory file"
+  VARS['installed']=true
+  write_inventory_file
+}
 download_provision(){
   debug "Download provision"
   release_url="https://github.com/apliteni/centos_provision/archive/${BRANCH}.tar.gz"

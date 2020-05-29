@@ -17,7 +17,6 @@ parse_inventory(){
   done < "${file}"
 }
 
-
 parse_line_from_inventory_file(){
   local line="${1}"
   IFS="=" read var_name value <<< "$line"
