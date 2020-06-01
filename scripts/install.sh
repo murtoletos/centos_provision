@@ -51,15 +51,24 @@ ROOT_UID=0
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.8'
+RELEASE_VERSION='2.11'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBROOT_PATH="/var/www/keitaro"
+WEBAPP_ROOT="/var/www/keitaro"
+
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
+KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
+KEITAROCTL_CONFIG_DIR="${KEITAROCTL_ROOT}/config"
+KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
+
+ETC_DIR=/etc/keitaro
+LOG_DIR=/var/log/keitaro
 
 if [[ "$EUID" == "$ROOT_UID" ]]; then
-  WORKING_DIR="${HOME}/.keitaro"
-  INVENTORY_DIR="/etc/keitaro/config"
+  WORKING_DIR=/var/tmp/keitaro
+  INVENTORY_DIR="${ETC_DIR}/config"
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
@@ -68,12 +77,11 @@ fi
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
-NGINX_ROOT_PATH="/etc/nginx"
-NGINX_VHOSTS_DIR="${NGINX_ROOT_PATH}/conf.d"
+NGINX_CONFIG_ROOT="/etc/nginx"
+NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
-SCRIPT_NAME="${TOOL_NAME}.sh"
-SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
+SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
 SCRIPT_LOG="${TOOL_NAME}.log"
 
 CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
@@ -83,11 +91,24 @@ CURRENT_COMMAND_SCRIPT_NAME="current_command.sh"
 INDENTATION_LENGTH=2
 INDENTATION_SPACES=$(printf "%${INDENTATION_LENGTH}s")
 
-if ! empty ${@}; then
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
-  TOOL_ARGS="${@}"
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
+
+if [[ "${TOOL_NAME}" == "install" ]]; then
+  SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  fi
 else
-  SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run"
+  if ! empty ${@}; then
+    SCRIPT_COMMAND="${SCRIPT_NAME} ${@}"
+    TOOL_ARGS="${@}"
+  else
+    SCRIPT_COMMAND="${SCRIPT_NAME}"
+  fi
 fi
 
 declare -A VARS
@@ -165,7 +186,7 @@ assert_installed(){
 }
 
 USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.13"
-KEITARO_LOCK_FILEPATH="${WEBROOT_PATH}/var/install.lock"
+KEITARO_LOCK_FILEPATH="${WEBAPP_ROOT}/var/install.lock"
 
 assert_keitaro_not_installed(){
   debug 'Ensure keitaro is not installed yet'
@@ -628,8 +649,8 @@ help_en_common(){
   print_err
 }
 
-init(){
-  init_log
+init() {
+  init_keitaroctl
   force_utf8_input
   debug "Starting init stage: log basic info"
   debug "Command: ${SCRIPT_COMMAND}"
@@ -639,16 +660,36 @@ init(){
   trap on_exit SIGHUP SIGINT SIGTERM
 }
 
-KEEP_LOGS_COUNT=10
+LOGS_TO_KEEP=10
+
+init_keitaroctl() {
+  init_keitaroctl_dirs_and_links
+  init_log
+}
+
+init_keitaroctl_dirs_and_links() {
+  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
+    if ! create_keitaroctl_dirs_and_links; then
+      echo "Can't create keitaro directories" >&2
+      exit 1
+    fi
+  fi
+}
 
 init_log() {
-  if mkdir -p ${WORKING_DIR} &> /dev/null; then
-    save_previous_log
-    delete_old_logs
-    > ${SCRIPT_LOG}
+  save_previous_log
+  delete_old_logs
+  > ${SCRIPT_LOG}
+}
+
+create_keitaroctl_dirs_and_links() {
+  if [[ "$EUID" == "$ROOT_UID" ]]; then
+    mkdir -p ${INVENTORY_DIR} ${LOG_DIR} ${WORKING_DIR} ${KEITAROCTL_BIN_DIR} &&
+      ln -s ${ETC_DIR} ${KEITAROCTL_CONFIG_DIR} &&
+      ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
+      ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
   else
-    echo "Can't create keitaro working dir ${WORKING_DIR}" >&2
-    exit 1
+    mkdir -p "${WORKING_DIR}"
   fi
 }
 
@@ -660,7 +701,7 @@ save_previous_log() {
 }
 
 delete_old_logs() {
-  for old_log in $(find "${WORKING_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${KEEP_LOGS_COUNT}); do
+  for old_log in $(find "${WORKING_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${LOGS_TO_KEEP}); do
     debug "Deleting old log ${old_log}"
     rm -f "${old_log}"
   done
@@ -1271,7 +1312,7 @@ DICT['en.messages.check_keitaro_dump_validity']="Checking SQL dump"
 DICT['en.messages.successful.use_old_credentials']="The database was successfully restored from the archive. Use old login data"
 DICT['en.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	You can install free SSL certificates with the following command
-	curl keitaro.io/enable-ssl.sh > run; bash run -D domain1.com,domain2.com
+	keitaroctl-enable-ssl -D domain1.com,domain2.com
 END
 )
 DICT['en.errors.see_logs']=$(cat <<- END
@@ -1320,7 +1361,7 @@ DICT['ru.messages.check_keitaro_dump_validity']="Проверяем SQL дамп
 DICT["ru.messages.successful.use_old_credentials"]="База данных успешно восстановлена из архива. Используйте старые данные для входа в систему"
 DICT['ru.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	Вы можете установить бесплатные SSL сертификаты, выполнив следующую команду:
-	curl keitaro.io/enable-ssl.sh > run; bash run -D domain1.com,domain2.com
+	keitaroctl-enable-ssl -D domain1.com,domain2.com -L ru
 END
 )
 DICT['ru.errors.see_logs']=$(cat <<- END
@@ -1411,8 +1452,8 @@ reset_vars_on_reconfiguration(){
 
 detect_inventory_variables(){
   if empty "${VARS['license_key']}"; then
-    if [[ -f ${WEBROOT_PATH}/var/license/key.lic ]]; then
-      VARS['license_key']="$(cat ${WEBROOT_PATH}/var/license/key.lic)"
+    if [[ -f ${WEBAPP_ROOT}/var/license/key.lic ]]; then
+      VARS['license_key']="$(cat ${WEBAPP_ROOT}/var/license/key.lic)"
       debug "Detected license key: ${VARS['license_key']}"
     fi
   fi
@@ -1440,7 +1481,7 @@ detect_inventory_variables(){
 
 get_var_from_keitaro_app_config(){
   local var="${1}"
-  get_var_from_config "${var}" "${WEBROOT_PATH}/application/config/config.ini.php" '='
+  get_var_from_config "${var}" "${WEBAPP_ROOT}/application/config/config.ini.php" '='
 }
 
 
@@ -1995,19 +2036,11 @@ download_provision(){
   release_url="https://github.com/apliteni/centos_provision/archive/${BRANCH}.tar.gz"
   run_command "curl -fsSL ${release_url} | tar xz"
 }
-#
-
-
-
-
-
-
 
 ANSIBLE_TASK_HEADER="^TASK \[(.*)\].*"
 ANSIBLE_TASK_FAILURE_HEADER="^(fatal|failed): "
 ANSIBLE_FAILURE_JSON_FILEPATH="${WORKING_DIR}/ansible_failure.json"
 ANSIBLE_LAST_TASK_LOG="${WORKING_DIR}/ansible_last_task.log"
-
 
 run_ansible_playbook(){
   local env="ANSIBLE_FORCE_COLOR=true"
@@ -2027,7 +2060,6 @@ run_ansible_playbook(){
   run_command "${command}" '' '' '' '' 'print_ansible_fail_message'
 }
 
-
 print_ansible_fail_message(){
   local current_command_script="${1}"
   if ansible_task_found; then
@@ -2042,17 +2074,14 @@ print_ansible_fail_message(){
   fi
 }
 
-
 ansible_task_found(){
   grep -qE "$ANSIBLE_TASK_HEADER" "$CURRENT_COMMAND_OUTPUT_LOG"
 }
-
 
 print_ansible_last_task_info(){
   echo "Task info:"
   head -n2 "$ANSIBLE_LAST_TASK_LOG" | sed -r 's/\*+$//g' | add_indentation
 }
-
 
 print_ansible_last_task_external_info(){
   if ansible_task_failure_found; then
@@ -2060,11 +2089,10 @@ print_ansible_last_task_external_info(){
     cat "$ANSIBLE_LAST_TASK_LOG" \
       | keep_json_only \
       > "$ANSIBLE_FAILURE_JSON_FILEPATH"
-    fi
-    print_ansible_task_module_info
-    rm "$ANSIBLE_FAILURE_JSON_FILEPATH"
-  }
-
+  fi
+  print_ansible_task_module_info
+  rm "$ANSIBLE_FAILURE_JSON_FILEPATH"
+}
 
 ansible_task_failure_found(){
   grep -qP "$ANSIBLE_TASK_FAILURE_HEADER" "$ANSIBLE_LAST_TASK_LOG"
@@ -2092,12 +2120,10 @@ keep_json_only(){
     | sed -e '/^}$/q'
   }
 
-
 remove_text_before_last_pattern_occurence(){
   local pattern="${1}"
   sed -n -r "H;/${pattern}/h;\${g;p;}"
 }
-
 
 print_ansible_task_module_info(){
   declare -A   json
@@ -2118,7 +2144,6 @@ print_ansible_task_module_info(){
   fi
 }
 
-
 print_field_content(){
   local field_caption="${1}"
   local field_content="${2}"
@@ -2130,7 +2155,6 @@ print_field_content(){
   fi
 }
 
-
 need_print_stdout_stderr(){
   local ansible_module="${1}"
   local stdout="${2}"
@@ -2141,7 +2165,6 @@ need_print_stdout_stderr(){
   local is_stderr_set=$?
   [[ "$ansible_module" == 'cmd' || ${is_stdout_set} == ${SUCCESS_RESULT} || ${is_stderr_set} == ${SUCCESS_RESULT} ]]
 }
-
 
 need_print_full_json(){
   local ansible_module="${1}"
@@ -2355,8 +2378,9 @@ json2dict() {
 #   http://blog.existentialize.com/dont-pipe-to-your-shell.html
 
 install(){
+  init_keitaroctl
   init "$@"
-  stage1 "$@"                 # initial script setup
+  stage1 "$@"               # initial script setup
   stage2                    # make some asserts
   stage3                    # read vars from the inventory file
   if isset "$RECONFIGURE"; then

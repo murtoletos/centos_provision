@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.13"
-KEITARO_LOCK_FILEPATH="${WEBROOT_PATH}/var/install.lock"
+KEITARO_LOCK_FILEPATH="${WEBAPP_ROOT}/var/install.lock"
 
 assert_keitaro_not_installed(){
   debug 'Ensure keitaro is not installed yet'

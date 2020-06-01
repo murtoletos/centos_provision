@@ -37,7 +37,7 @@ _require 'lib/system/debug.sh'
 _require 'lib/system/fail.sh'
 _require 'lib/system/help_and_usage.sh'
 _require 'lib/system/init.sh'
-_require 'lib/system/init_log.sh'
+_require 'lib/system/init_keitaroctl.sh'
 _require 'lib/system/log_and_print_err.sh'
 _require 'lib/system/on_exit.sh'
 _require 'lib/system/print_content_of.sh'
@@ -101,8 +101,9 @@ _require 'app/installer/stage6/json2dict.sh'
 #   http://blog.existentialize.com/dont-pipe-to-your-shell.html
 
 install(){
+  init_keitaroctl
   init "$@"
-  stage1 "$@"                 # initial script setup
+  stage1 "$@"               # initial script setup
   stage2                    # make some asserts
   stage3                    # read vars from the inventory file
   if isset "$RECONFIGURE"; then
