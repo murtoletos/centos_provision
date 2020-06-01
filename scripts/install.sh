@@ -185,7 +185,7 @@ assert_installed(){
   fi
 }
 
-USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.13"
+USE_NEW_ALGORITHM_FOR_INSTALLATION_CHECK_SINCE="2.12"
 KEITARO_LOCK_FILEPATH="${WEBAPP_ROOT}/var/install.lock"
 
 assert_keitaro_not_installed(){
