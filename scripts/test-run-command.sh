@@ -57,9 +57,18 @@ BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
 WEBAPP_ROOT="/var/www/keitaro"
 
+KEITAROCTL_ROOT="/opt/keitaro"
+KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
+KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
+KEITAROCTL_CONFIG_DIR="${KEITAROCTL_ROOT}/config"
+KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
+
+ETC_DIR=/etc/keitaro
+LOG_DIR=/var/log/keitaro
+
 if [[ "$EUID" == "$ROOT_UID" ]]; then
-  WORKING_DIR="${HOME}/.keitaro"
-  INVENTORY_DIR="/etc/keitaro/config"
+  WORKING_DIR=/var/tmp/keitaro
+  INVENTORY_DIR="${ETC_DIR}/config"
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
@@ -72,8 +81,7 @@ NGINX_CONFIG_ROOT="/etc/nginx"
 NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
-SCRIPT_NAME="${TOOL_NAME}.sh"
-SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
+SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
 SCRIPT_LOG="${TOOL_NAME}.log"
 
 CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
@@ -87,6 +95,7 @@ KEITAROCTL_ROOT="/opt/keitaro"
 KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
 
 if [[ "${TOOL_NAME}" == "install" ]]; then
+  SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
   if ! empty ${@}; then
     SCRIPT_COMMAND="curl -fsSL "$SCRIPT_URL" > run; bash run ${@}"
     TOOL_ARGS="${@}"
@@ -95,10 +104,10 @@ if [[ "${TOOL_NAME}" == "install" ]]; then
   fi
 else
   if ! empty ${@}; then
-    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME} ${@}"
+    SCRIPT_COMMAND="${SCRIPT_NAME} ${@}"
     TOOL_ARGS="${@}"
   else
-    SCRIPT_COMMAND="keitaroctl-${TOOL_NAME}"
+    SCRIPT_COMMAND="${SCRIPT_NAME}"
   fi
 fi
 
@@ -252,11 +261,6 @@ debug(){
   local message="${1}"
   echo "$message" >> "$SCRIPT_LOG"
 }
-#
-
-
-
-
 
 fail(){
   local message="${1}"
@@ -282,13 +286,26 @@ init(){
   trap on_exit SIGHUP SIGINT SIGTERM
 }
 
-init_log(){
-  if mkdir -p ${WORKING_DIR} &> /dev/null; then
-    > ${SCRIPT_LOG}
-  else
-    echo "Can't create keitaro working dir ${WORKING_DIR}" >&2
-    exit 1
+LOGS_TO_KEEP=10
+
+init_log() {
+  save_previous_log
+  delete_old_logs
+  > ${SCRIPT_LOG}
+}
+
+save_previous_log() {
+  if [[ -f "${SCRIPT_LOG}" ]]; then
+    local datetime_of_script_log=$(date -r "${SCRIPT_LOG}" +"%Y%m%d%H%M%S")
+    mv "${SCRIPT_LOG}" "${WORKING_DIR}/${SCRIPT_LOG}-${datetime_of_script_log}"
   fi
+}
+
+delete_old_logs() {
+  for old_log in $(find "${WORKING_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${LOGS_TO_KEEP}); do
+    debug "Deleting old log ${old_log}"
+    rm -f "${old_log}"
+  done
 }
 
 log_and_print_err(){
@@ -570,19 +587,11 @@ remove_current_command(){
   rmdir $(dirname "$current_command_script")
 }
 
-#
-
-
-
-
-
-
 
 ANSIBLE_TASK_HEADER="^TASK \[(.*)\].*"
 ANSIBLE_TASK_FAILURE_HEADER="^(fatal|failed): "
 ANSIBLE_FAILURE_JSON_FILEPATH="${WORKING_DIR}/ansible_failure.json"
 ANSIBLE_LAST_TASK_LOG="${WORKING_DIR}/ansible_last_task.log"
-
 
 run_ansible_playbook(){
   local env="ANSIBLE_FORCE_COLOR=true"
@@ -602,7 +611,6 @@ run_ansible_playbook(){
   run_command "${command}" '' '' '' '' 'print_ansible_fail_message'
 }
 
-
 print_ansible_fail_message(){
   local current_command_script="${1}"
   if ansible_task_found; then
@@ -617,17 +625,14 @@ print_ansible_fail_message(){
   fi
 }
 
-
 ansible_task_found(){
   grep -qE "$ANSIBLE_TASK_HEADER" "$CURRENT_COMMAND_OUTPUT_LOG"
 }
-
 
 print_ansible_last_task_info(){
   echo "Task info:"
   head -n2 "$ANSIBLE_LAST_TASK_LOG" | sed -r 's/\*+$//g' | add_indentation
 }
-
 
 print_ansible_last_task_external_info(){
   if ansible_task_failure_found; then
@@ -635,11 +640,10 @@ print_ansible_last_task_external_info(){
     cat "$ANSIBLE_LAST_TASK_LOG" \
       | keep_json_only \
       > "$ANSIBLE_FAILURE_JSON_FILEPATH"
-    fi
-    print_ansible_task_module_info
-    rm "$ANSIBLE_FAILURE_JSON_FILEPATH"
-  }
-
+  fi
+  print_ansible_task_module_info
+  rm "$ANSIBLE_FAILURE_JSON_FILEPATH"
+}
 
 ansible_task_failure_found(){
   grep -qP "$ANSIBLE_TASK_FAILURE_HEADER" "$ANSIBLE_LAST_TASK_LOG"
@@ -667,12 +671,10 @@ keep_json_only(){
     | sed -e '/^}$/q'
   }
 
-
 remove_text_before_last_pattern_occurence(){
   local pattern="${1}"
   sed -n -r "H;/${pattern}/h;\${g;p;}"
 }
-
 
 print_ansible_task_module_info(){
   declare -A   json
@@ -693,7 +695,6 @@ print_ansible_task_module_info(){
   fi
 }
 
-
 print_field_content(){
   local field_caption="${1}"
   local field_content="${2}"
@@ -705,7 +706,6 @@ print_field_content(){
   fi
 }
 
-
 need_print_stdout_stderr(){
   local ansible_module="${1}"
   local stdout="${2}"
@@ -716,7 +716,6 @@ need_print_stdout_stderr(){
   local is_stderr_set=$?
   [[ "$ansible_module" == 'cmd' || ${is_stdout_set} == ${SUCCESS_RESULT} || ${is_stderr_set} == ${SUCCESS_RESULT} ]]
 }
-
 
 need_print_full_json(){
   local ansible_module="${1}"

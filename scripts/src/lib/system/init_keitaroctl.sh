@@ -2,7 +2,7 @@
 
 init_keitaroctl() {
   if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
-    if ! create_keitaroctl_dirs_and_links; then
+    if ! init_keitaroctl_dirs_and_links; then
       echo "Can't create keitaro directories" >&2
       exit 1
     fi
