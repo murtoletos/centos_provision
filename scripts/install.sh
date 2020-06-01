@@ -501,25 +501,6 @@ detect_inventory_path(){
   debug "Inventory file not found"
 }
 
-init_keitaroctl() {
-  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
-    if ! init_keitaroctl_dirs_and_links; then
-      echo "Can't create keitaro directories" >&2
-      exit 1
-    fi
-  fi
-}
-
-init_keitaroctl_dirs_and_links() {
-  if [[ "$EUID" == "$ROOT_UID" ]]; then
-    mkdir -p ${INVENTORY_DIR} ${LOG_DIR} ${WORKING_DIR} ${KEITAROCTL_BIN_DIR} &&
-      ln -s ${ETC_DIR} ${KEITAROCTL_CONFIG_DIR} &&
-      ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-      ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
-  else
-    echo "Skip creating dirs"
-  fi
-}
 debug(){
   local message="${1}"
   echo "$message" >> "$SCRIPT_LOG"
@@ -668,8 +649,8 @@ help_en_common(){
   print_err
 }
 
-init(){
-  init_log
+init() {
+  init_keitaroctl
   force_utf8_input
   debug "Starting init stage: log basic info"
   debug "Command: ${SCRIPT_COMMAND}"
@@ -681,10 +662,35 @@ init(){
 
 LOGS_TO_KEEP=10
 
+init_keitaroctl() {
+  init_keitaroctl_dirs_and_links
+  init_log
+}
+
+init_keitaroctl_dirs_and_links() {
+  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
+    if ! create_keitaroctl_dirs_and_links; then
+      echo "Can't create keitaro directories" >&2
+      exit 1
+    fi
+  fi
+}
+
 init_log() {
   save_previous_log
   delete_old_logs
   > ${SCRIPT_LOG}
+}
+
+create_keitaroctl_dirs_and_links() {
+  if [[ "$EUID" == "$ROOT_UID" ]]; then
+    mkdir -p ${INVENTORY_DIR} ${LOG_DIR} ${WORKING_DIR} ${KEITAROCTL_BIN_DIR} &&
+      ln -s ${ETC_DIR} ${KEITAROCTL_CONFIG_DIR} &&
+      ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
+      ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
+  else
+    mkdir -p "${WORKING_DIR}"
+  fi
 }
 
 save_previous_log() {
