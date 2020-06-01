@@ -5,7 +5,7 @@
     state: directory
 
 - name: Backup configs
-  shell: test -e /etc/{{item}} && cp -R /etc/{{ item }} {{ keitaro_current_backup_dir }}/{{ item }}
+  shell: test -e /etc/{{item}} && cp -R /etc/{{ item }} {{ keitaro_backups_current_dir }}/{{ item }}
   with_items:
     - letsencrypt
     - logrotate.d
