@@ -316,18 +316,19 @@ create_keitaroctl_dirs_and_links() {
       ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
   else
     mkdir -p "${WORKING_DIR}"
+    LOG_DIR="${WORKING_DIR}"
   fi
 }
 
 save_previous_log() {
   if [[ -f "${SCRIPT_LOG}" ]]; then
     local datetime_of_script_log=$(date -r "${SCRIPT_LOG}" +"%Y%m%d%H%M%S")
-    mv "${SCRIPT_LOG}" "${WORKING_DIR}/${SCRIPT_LOG}-${datetime_of_script_log}"
+    mv "${SCRIPT_LOG}" "${LOG_DIR}/${SCRIPT_LOG}-${datetime_of_script_log}"
   fi
 }
 
 delete_old_logs() {
-  for old_log in $(find "${WORKING_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${LOGS_TO_KEEP}); do
+  for old_log in $(find "${LOG_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${LOGS_TO_KEEP}); do
     debug "Deleting old log ${old_log}"
     rm -f "${old_log}"
   done
