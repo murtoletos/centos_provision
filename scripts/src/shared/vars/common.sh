@@ -19,15 +19,15 @@ WEBAPP_ROOT="/var/www/keitaro"
 KEITAROCTL_ROOT="/opt/keitaro"
 KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
 KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
-KEITAROCTL_CONFIG_DIR="${KEITAROCTL_ROOT}/config"
+KEITAROCTL_ETC_DIR="${KEITAROCTL_ROOT}/etc"
 KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
 
 ETC_DIR=/etc/keitaro
-LOG_DIR=/var/log/keitaro
 
 if [[ "$EUID" == "$ROOT_UID" ]]; then
   WORKING_DIR=/var/tmp/keitaro
   INVENTORY_DIR="${ETC_DIR}/config"
+  LOG_DIR=/var/log/keitaro
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
