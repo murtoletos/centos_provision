@@ -1,4 +1,4 @@
-# roles/mariadb/tasks/install.yml
+# roles/mariadb/tasks/main.yml
 ---
 - name: check if package is installed
   package:

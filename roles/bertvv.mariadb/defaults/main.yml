@@ -1,4 +1,4 @@
-# roles/mariadb/defaults/install.yml
+# roles/mariadb/defaults/main.yml
 ---
 
 mariadb_databases: []
