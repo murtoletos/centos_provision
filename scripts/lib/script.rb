@@ -24,7 +24,7 @@ class Script
   )
     @script_command = script_command
     @base_name = File.basename(script_command, '.*')
-    @log_file = "#{@base_name}.log"
+    @log_file = @docker_image ? "/var/log/keitaro/#{@base_name}.log" : ".keitaro/#{@base_name}.log"
 
     @env, @args, @prompts_with_values, @docker_image, @command_stubs, @commands, @save_files =
       env, args, prompts_with_values, docker_image, command_stubs, commands, [*save_files]
