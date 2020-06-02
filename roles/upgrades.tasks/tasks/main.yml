@@ -1,9 +1,3 @@
-- include: upgrade/upgrade_mariadb.yml
-  tags: 'upgrade, upgrade-mariadb'
-  
-- include: upgrade/upgrade_tokudb.yml
-  tags: 'upgrade, upgrade-mariadb'
-
 - include: upgrade/upgrade_nginx.yml
   notify:
     - reload nginx
