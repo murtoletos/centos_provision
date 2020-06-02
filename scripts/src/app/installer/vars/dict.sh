@@ -12,7 +12,7 @@ DICT['en.messages.successful.how_to_enable_ssl']=$(cat <<- END
 END
 )
 DICT['en.errors.see_logs']=$(cat <<- END
-	Installation log saved to ${SCRIPT_LOG}. Configuration settings saved to ${INVENTORY_PATH}.
+	Installation log saved to ${LOG_PATH}. Configuration settings saved to ${INVENTORY_PATH}.
 	You can rerun \`${SCRIPT_COMMAND}\` with saved settings after resolving installation problems.
 END
 )
@@ -61,7 +61,7 @@ DICT['ru.messages.successful.how_to_enable_ssl']=$(cat <<- END
 END
 )
 DICT['ru.errors.see_logs']=$(cat <<- END
-	Журнал установки сохранён в ${SCRIPT_LOG}. Настройки сохранены в ${INVENTORY_PATH}.
+	Журнал установки сохранён в ${LOG_PATH}. Настройки сохранены в ${INVENTORY_PATH}.
 	Вы можете повторно запустить \`${SCRIPT_COMMAND}\` с этими настройками после устранения возникших проблем.
 END
 )

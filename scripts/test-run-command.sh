@@ -72,7 +72,10 @@ if [[ "$EUID" == "$ROOT_UID" ]]; then
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
+  LOG_DIR="${WORKING_DIR}"
 fi
+LOG_FILENAME="${TOOL_NAME}.log"
+LOG_PATH="${LOG_DIR}/${LOG_FILENAME}"
 
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
@@ -82,7 +85,6 @@ NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
-SCRIPT_LOG="${TOOL_NAME}.log"
 
 CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
 CURRENT_COMMAND_ERROR_LOG="current_command.error.log"
@@ -259,7 +261,7 @@ clean_up(){
 
 debug(){
   local message="${1}"
-  echo "$message" >> "$SCRIPT_LOG"
+  echo "$message" >> "${LOG_PATH}"
 }
 
 fail(){
@@ -302,33 +304,25 @@ init_keitaroctl_dirs_and_links() {
   fi
 }
 
-init_log() {
-  save_previous_log
-  delete_old_logs
-  > ${SCRIPT_LOG}
-}
-
 create_keitaroctl_dirs_and_links() {
   if [[ "$EUID" == "$ROOT_UID" ]]; then
-    mkdir -p ${INVENTORY_DIR} ${LOG_DIR} ${WORKING_DIR} ${KEITAROCTL_BIN_DIR} &&
+    mkdir -p ${WORKING_DIR} ${LOG_DIR} ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} &&
       ln -s ${ETC_DIR} ${KEITAROCTL_CONFIG_DIR} &&
       ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
       ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
   else
-    mkdir -p "${WORKING_DIR}"
-    LOG_DIR="${WORKING_DIR}"
+    mkdir -p ${WORKING_DIR} ${LOG_DIR}
   fi
 }
 
-save_previous_log() {
-  if [[ -f "${SCRIPT_LOG}" ]]; then
-    local datetime_of_script_log=$(date -r "${SCRIPT_LOG}" +"%Y%m%d%H%M%S")
-    mv "${SCRIPT_LOG}" "${LOG_DIR}/${SCRIPT_LOG}-${datetime_of_script_log}"
-  fi
+init_log() {
+  save_previous_log
+  delete_old_logs
+  > ${LOG_PATH}
 }
 
 delete_old_logs() {
-  for old_log in $(find "${LOG_DIR}" -name "${SCRIPT_LOG}-*" | sort | head -n-${LOGS_TO_KEEP}); do
+  for old_log in $(find "${LOG_DIR}" -name "${LOG_FILENAME}-*" | sort | head -n -${LOGS_TO_KEEP}); do
     debug "Deleting old log ${old_log}"
     rm -f "${old_log}"
   done
@@ -533,8 +527,8 @@ save_command_logs(){
   local evaluated_command="${1}"
   local output_log="${2}"
   local remove_colors="sed -r -e '${REMOVE_COLORS_SED_REGEX}'"
-  save_output_log="tee -i ${CURRENT_COMMAND_OUTPUT_LOG} | tee -ia >(${remove_colors} >> ${SCRIPT_LOG})"
-  save_error_log="tee -i ${CURRENT_COMMAND_ERROR_LOG} | tee -ia >(${remove_colors} >> ${SCRIPT_LOG})"
+  save_output_log="tee -i ${CURRENT_COMMAND_OUTPUT_LOG} | tee -ia >(${remove_colors} >> ${LOG_PATH})"
+  save_error_log="tee -i ${CURRENT_COMMAND_ERROR_LOG} | tee -ia >(${remove_colors} >> ${LOG_PATH})"
   if isset "${output_log}"; then
     save_output_log="${save_output_log} | tee -ia ${output_log}"
     save_error_log="${save_error_log} | tee -ia ${output_log}"

@@ -31,7 +31,10 @@ if [[ "$EUID" == "$ROOT_UID" ]]; then
 else
   WORKING_DIR=".keitaro"
   INVENTORY_DIR=".keitaro"
+  LOG_DIR="${WORKING_DIR}"
 fi
+LOG_FILENAME="${TOOL_NAME}.log"
+LOG_PATH="${LOG_DIR}/${LOG_FILENAME}"
 
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
@@ -41,7 +44,6 @@ NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
-SCRIPT_LOG="${TOOL_NAME}.log"
 
 CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
 CURRENT_COMMAND_ERROR_LOG="current_command.error.log"
