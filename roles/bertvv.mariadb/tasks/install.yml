@@ -1,6 +1,6 @@
 - name: Add MariaDB repo
   template:
-    src: ../shared-files/mariadb.repo.j2
+    src: ../../mariadb.repo.j2
     dest: /etc/yum.repos.d/mariadb.repo
 
 - name: Install packages
