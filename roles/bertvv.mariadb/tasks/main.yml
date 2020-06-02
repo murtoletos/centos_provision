@@ -2,7 +2,7 @@
 ---
 - name: check if package is installed
   package:
-    name: mariadb
+    name: mysql
     state: present
   check_mode: true
   register: mariadb_check
