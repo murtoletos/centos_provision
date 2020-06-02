@@ -8,4 +8,4 @@
   register: mariadb_check
 
 - include: install.yml
-  when: not mariadb_check.changed
+  when: mariadb_check.changed

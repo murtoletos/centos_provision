@@ -28,12 +28,9 @@
     name: "{{ tokudb_engine }}"
     state: installed
   when: rhel_version == 8
-
-- name: Ensure service is started
-  service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
-  tags: mariadb
         
+- name: Restart MariaDB service
+  service:
+    name: mariadb
+    state: restarted             
         
