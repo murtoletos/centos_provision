@@ -54,6 +54,7 @@
     name: root
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ mariadb_socket }}"
     state: present
   with_items:
     - 127.0.0.1
@@ -73,6 +74,7 @@
     name: root
     host: "{{ ansible_hostname }}"
     password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ mariadb_socket }}"
     state: present
   when: ansible_hostname != 'localhost'
   tags: mariadb

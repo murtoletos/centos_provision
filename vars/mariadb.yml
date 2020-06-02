@@ -13,3 +13,4 @@ mariadb_service: mariadb
 mariadb_config: /etc/my.cnf.d/network.cnf
 mariadb_my_config: ~/.my.cnf
 mariadb_version: 10.4
+mariadb_socket: /var/lib/mysql/mysql.sock
