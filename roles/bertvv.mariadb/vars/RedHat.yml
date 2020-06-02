@@ -1,4 +1,4 @@
-# roles/mariadb/vars/main.yml
+# roles/mariadb/vars/install.yml
 ---
 
 mariadb_packages:

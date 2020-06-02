@@ -1,2 +1,2 @@
-- include: upgrade/main.yml
+- include: upgrade/install.yml
   tags: 'upgrade'

@@ -1,4 +1,4 @@
-# roles/mariadb/handlers/main.yml
+# roles/mariadb/handlers/install.yml
 ---
 
 - name: restart mariadb
