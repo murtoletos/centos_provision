@@ -10,18 +10,18 @@
     state: absent
   with_items: "{{ mariadb_packages }}"
   tags: mariadb
-  when: mariadb_version_output is not search('{{ mariadb_version }}')
+  when: mariadb_version_output is not search('10.4')
 
 - name: remove old galera
   package:
     name: galera
     state: absent
   tags: mariadb
-  when: mariadb_version_output is not search('{{ mariadb_version }}')
+  when: mariadb_version_output is not search('10.4')
 
 - name: remove old maria Centos 8
   dnf:
     name: [MariaDB-server, MariaDB-client]
     state: absent
   tags: mariadb
-  when: rhel_version == 8 and mariadb_version_output is not search('{{ mariadb_version }}')
+  when: rhel_version == 8 and mariadb_version_output is not search('10.4')
