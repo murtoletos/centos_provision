@@ -1,15 +1,9 @@
-- name: Ensure service is started
-  service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
-  tags: mariadb
-
 - name: set mariadb version to variable
   shell: mysql --version
   register: mysql_version_output
 - set_fact:
     mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
+  when: "'mysql' in ansible_facts.packages"
 
 - name: remove old maria Centos 7
   package:
