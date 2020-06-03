@@ -41,8 +41,7 @@
 - name: Install network config file
   template:
     src: etc_my.cnf.d_network.cnf.j2
-    dest: "{{ mariadb_config_network }}"
-  notify: restart mariadb
+    dest: "{{ mariadb_config }}"
   tags: mariadb
   
 - name: Configure swappiness
