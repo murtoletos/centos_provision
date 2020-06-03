@@ -1,9 +1,3 @@
-- name: set mariadb version to variable
-  shell: mysql --version
-  register: mysql_version_output
-- set_fact:
-    mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
-
 - name: remove old maria Centos 7
   package:
     name: "{{ item }}"
