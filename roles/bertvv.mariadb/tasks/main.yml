@@ -38,13 +38,6 @@
   tags: mariadb
   when: rhel_version == 8
 
-- name: Ensure service is started
-  service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
-  tags: mariadb
-
 - name: Install config file for network settings
   template:
     src: etc_my.cnf.d_network.cnf.j2
