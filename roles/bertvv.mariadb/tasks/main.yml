@@ -9,3 +9,6 @@
 
 - include: install.yml
   when: mariadb_check.changed
+
+- include: tune.yml
+  when: not mariadb_check.changed
