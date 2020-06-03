@@ -1,6 +1,3 @@
-- name: Tune logroatate
-  include: tune-logrotate.yml
-
 - name: Tune mariadb
   include: tune-mariadb.yml
 
