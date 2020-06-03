@@ -81,8 +81,6 @@
 - name: Create the databases
   mysql_db:
     name: "{{ item }}"
-    login_user: root
-    login_password: "{{ mariadb_root_password }}"
     login_unix_socket: "{{ mariadb_socket }}"
     state: present
   with_items: "{{ mariadb_databases }}"
