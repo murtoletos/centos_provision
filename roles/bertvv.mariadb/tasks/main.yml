@@ -78,16 +78,16 @@
   when: root_pwd_check.rc == 0
   tags: mariadb
 
-- name: Create user defined databases
+- name: Create the databases
   mysql_db:
-    name: "{{ item.name }}"
+    name: "{{ item }}"
     login_user: root
     login_password: "{{ mariadb_root_password }}"
     login_unix_socket: "{{ mariadb_socket }}"
     state: present
   with_items: "{{ mariadb_databases }}"
-  register: db_creation
   tags: mariadb
+  register: db_creation
 
 - name: Copy database init scripts
   template:
