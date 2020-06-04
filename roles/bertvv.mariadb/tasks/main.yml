@@ -38,5 +38,5 @@
   tags: mariadb
   when: rhel_version == 8
   
-- include: ensure_relevant_keitaro_installed.yml
-  when: "'mysql' not in ansible_facts.packages"  
+- include: tune.yml
+  tags: [ 'never', 'upgrade' ]
