@@ -51,6 +51,7 @@
     src: home_my.cnf.j2
     dest: "{{ mariadb_my_config }}"
     mode: '0600'
+    force: yes
   tags: mariadb  
 
 - name: Remove anonymous users
