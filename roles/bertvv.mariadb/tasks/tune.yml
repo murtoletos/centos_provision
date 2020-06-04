@@ -5,15 +5,6 @@
   notify: restart mariadb
   tags: mariadb
   
-- name: Check if a custom root password is specified
-  debug:
-    msg: >
-      Warning!! the MariaDB root password was left empty. Please set a custom
-      password with role variable mariadb_root_password to secure your database
-      server!
-  when: mariadb_root_password | length == 0
-
-# This command will fail when the root password was set previously
 - name: Check if root password is set
   shell: >
     mysqladmin -u root status
@@ -45,6 +36,13 @@
     - ::1
     - 127.0.0.1
   when: root_pwd_check.rc == 0
+  tags: mariadb  
+  
+- name: Install ~/.my.cnf
+  template:
+    src: home_my.cnf.j2
+    dest: "{{ mariadb_my_config }}"
+    mode: '0600'
   tags: mariadb  
 
 - name: Remove anonymous users
