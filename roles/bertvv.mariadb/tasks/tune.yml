@@ -38,19 +38,19 @@
   when: root_pwd_check.rc == 0
   tags: mariadb  
   
+- name: Install ~/.my.cnf
+  template:
+    src: home_my.cnf.j2
+    dest: "{{ mariadb_my_config }}"
+    mode: '0600'
+  tags: mariadb
+
 - name: Create the databases
   mysql_db:
     login_unix_socket: "{{ mariadb_socket }}"
     name: "{{ item }}"
     state: present
   with_items: "{{ mariadb_databases }}"
-  tags: mariadb  
-  
-- name: Install ~/.my.cnf
-  template:
-    src: home_my.cnf.j2
-    dest: "{{ mariadb_my_config }}"
-    mode: '0600'
   tags: mariadb  
 
 - name: Remove anonymous users
