@@ -7,6 +7,7 @@
 
 - name: Update root password
   mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     name: root
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
@@ -26,6 +27,7 @@
 
 - name: Update root password
   mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     name: root
     host: "{{ ansible_hostname }}"
     password: "{{ mariadb_root_password }}"
