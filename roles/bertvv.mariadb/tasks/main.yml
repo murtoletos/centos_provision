@@ -39,4 +39,4 @@
   when: rhel_version == 8
   
 - include: tune.yml
-  tags: [ 'never', 'upgrade' ]
+  when: "'upgrade' not in ansible_run_tags"
