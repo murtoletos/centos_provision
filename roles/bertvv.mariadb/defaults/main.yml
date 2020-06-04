@@ -14,7 +14,7 @@ mariadb_packages:
   - MariaDB-server
   - MySQL-python
 
-mariadb_socket: /var/lib/mysql/mysql.sock
+mariadb_socket: /var/run/mysqld/mysqld.sock
 
 mariadb_service: mariadb
 mariadb_config: /etc/my.cnf.d/network.cnf
