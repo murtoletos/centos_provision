@@ -38,6 +38,14 @@
   when: root_pwd_check.rc == 0
   tags: mariadb  
   
+- name: Create the databases
+  mysql_db:
+    login_unix_socket: "{{ mariadb_socket }}"
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ mariadb_databases }}"
+  tags: mariadb  
+  
 - name: Install ~/.my.cnf
   template:
     src: home_my.cnf.j2
@@ -67,4 +75,20 @@
     login_unix_socket: "{{ mariadb_socket }}"
     state: present
   with_items: "{{ mariadb_users }}"
+  tags: mariadb
+
+- name: Copy database init scripts
+  copy:
+    src: "{{ item.script }}"
+    dest: "/tmp/{{ item.script|basename }}"
+  with_items: "{{ mariadb_init_scripts }}"
+  tags: mariadb
+
+- name: Initialise databases
+  mysql_db:
+    name: "{{ item.database }}"
+    login_unix_socket: "{{ mariadb_socket }}"
+    state: import
+    target: "/tmp/{{ item.script|basename }}"
+  with_items: "{{ mariadb_init_scripts }}"
   tags: mariadb
