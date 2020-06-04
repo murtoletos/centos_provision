@@ -47,35 +47,6 @@
   when: root_pwd_check.rc == 0
   tags: mariadb  
 
-- name: Copy database init scripts
-  template:
-    src: "{{ item.item.init_script }}"
-    dest: "/tmp/{{ item.item.init_script|basename }}"
-    mode: '0600'
-  with_items: "{{ db_creation.results }}"
-  when: item.changed and item.item.init_script is defined
-  tags: mariadb
-
-- name: Initialise databases
-  mysql_db:
-    name: "{{ item.item.name }}"
-    state: import
-    target: "/tmp/{{ item.item.init_script|basename }}"
-    login_user: root
-    login_password: "{{ mariadb_root_password }}"
-    login_unix_socket: "{{ mariadb_socket }}"
-  with_items: "{{ db_creation.results }}"
-  when: item.changed and item.item.init_script is defined
-  tags: mariadb
-
-- name: Delete init scripts from the server
-  file:
-    name: "/tmp/{{ item.item.init_script|basename }}"
-    state: absent
-  with_items: "{{ db_creation.results }}"
-  when: item.changed and item.item.init_script is defined
-  tags: mariadb
-  
 - name: Remove anonymous users
   mysql_user:
     name: ''
