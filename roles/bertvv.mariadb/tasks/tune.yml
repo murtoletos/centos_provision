@@ -1,25 +1,21 @@
-- include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
-  tags: mariadb
-
+---
 - name: Install config file for network settings
   template:
     src: etc_my.cnf.d_network.cnf.j2
     dest: "{{ mariadb_config }}"
   notify: restart mariadb
   tags: mariadb
-
+  
 - name: Install ~/.my.cnf
   template:
     src: home_my.cnf.j2
     dest: "{{ mariadb_my_config }}"
     mode: '0600'
-  tags: mariadb
+  tags: mariadb  
 
 - name: Update root password
   mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     name: root
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"

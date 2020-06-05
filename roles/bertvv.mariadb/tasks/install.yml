@@ -1,3 +1,4 @@
+---
 - name: Add MariaDB repo
   template:
     src: mariadb.repo.j2
