@@ -11,6 +11,13 @@
   notify: restart mariadb
   tags: mariadb
 
+- name: Install ~/.my.cnf
+  template:
+    src: home_my.cnf.j2
+    dest: "{{ mariadb_my_config }}"
+    mode: '0600'
+  tags: mariadb
+
 - name: Update root password
   mysql_user:
     name: root
@@ -21,13 +28,6 @@
     - 127.0.0.1
     - ::1
     - localhost
-  tags: mariadb
-
-- name: Install ~/.my.cnf
-  template:
-    src: home_my.cnf.j2
-    dest: "{{ mariadb_my_config }}"
-    mode: '0600'
   tags: mariadb
 
 - name: Update root password
