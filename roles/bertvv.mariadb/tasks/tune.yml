@@ -54,8 +54,6 @@
 - name: Remove the test database
   mysql_db:
     name: test
-    login_user: root
-    login_password: "{{ mariadb_root_password }}"
     login_unix_socket: "{{ mariadb_socket }}"
     state: absent
   tags: mariadb
