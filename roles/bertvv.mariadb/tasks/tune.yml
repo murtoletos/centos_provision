@@ -18,7 +18,6 @@
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   with_items:
     - 127.0.0.1
     - ::1
@@ -31,7 +30,6 @@
     host: "{{ ansible_hostname }}"
     password: "{{ mariadb_root_password }}"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   when: ansible_hostname != 'localhost'
   tags: mariadb
 
@@ -39,7 +37,6 @@
   mysql_db:
     name: test
     state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   tags: mariadb
 
 - name: Remove anonymous users
@@ -47,7 +44,6 @@
     name: ''
     host: "{{ item }}"
     state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   with_items:
     - localhost
     - "{{ ansible_hostname }}"
@@ -57,7 +53,6 @@
   mysql_db:
     name: "{{ item }}"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   with_items: "{{ mariadb_databases }}"
   tags: mariadb
 
@@ -68,7 +63,6 @@
     priv: "{{ item.priv }}"
     host: "{{ item.host|default('localhost') }}"
     state: present
-    login_unix_socket: /var/run/mysqld/mysqld.sock
   with_items: "{{ mariadb_users }}"
   tags: mariadb
 
@@ -83,7 +77,6 @@
   mysql_db:
     name: "{{ item.database }}"
     state: import
-    login_unix_socket: /var/run/mysqld/mysqld.sock
     target: "/tmp/{{ item.script|basename }}"
   with_items: "{{ mariadb_init_scripts }}"
   tags: mariadb
