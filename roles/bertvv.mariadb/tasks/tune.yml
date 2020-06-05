@@ -1,3 +1,9 @@
+- name: Create socket
+  file:
+    path: /var/lib/mysql/mysql.sock
+    owner: mysql
+    mode: '0755'
+
 - name: Install config file for network settings
   template:
     src: etc_my.cnf.d_network.cnf.j2
