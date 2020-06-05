@@ -3,7 +3,7 @@
     path: /var/lib/mysql/mysql.sock
     owner: mysql
     mode: '0755'
-    state: file
+    state: touch
 
 - name: Install config file for network settings
   template:
