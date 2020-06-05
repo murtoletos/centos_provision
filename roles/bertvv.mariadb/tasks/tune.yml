@@ -1,8 +1,8 @@
-- name: Ensure service is started
-  service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
+- name: Install ~/.my.cnf
+  template:
+    src: home_my.cnf.j2
+    dest: "{{ mariadb_my_config }}"
+    mode: '0600'
   tags: mariadb
 
 - name: Install config file for network settings
@@ -23,13 +23,7 @@
     - ::1
     - localhost
   tags: mariadb
-
-- name: Install ~/.my.cnf
-  template:
-    src: home_my.cnf.j2
-    dest: "{{ mariadb_my_config }}"
-    mode: '0600'
-  tags: mariadb
+  ignore_errors: true
 
 - name: Update root password
   mysql_user:
