@@ -29,10 +29,7 @@
     state: installed
   when: rhel_version == 8
         
-- name: Ensure service is started
+- name: Restart MariaDB service
   service:
-    name: "{{ mariadb_service }}"
-    state: started
-    enabled: yes
-  tags: mariadb          
-        
+    name: mariadb
+    state: restarted      
