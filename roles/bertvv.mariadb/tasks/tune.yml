@@ -15,7 +15,7 @@
 
 - name: Update root password
   mysql_user:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_unix_socket: "{{ mariadb_socket }}"
     name: root
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
