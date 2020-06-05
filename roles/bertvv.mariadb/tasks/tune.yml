@@ -1,8 +1,9 @@
-- name: Create socket
-  file:
-    path: /var/lib/mysql/mysql.sock
-    mode: '0755'
-    state: touch
+- name: Ensure service is started
+  service:
+    name: "{{ mariadb_service }}"
+    state: started
+    enabled: yes
+  tags: mariadb
 
 - name: Install config file for network settings
   template:
