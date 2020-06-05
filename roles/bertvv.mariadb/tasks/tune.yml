@@ -23,7 +23,6 @@
     - ::1
     - localhost
   tags: mariadb
-  ignore_errors: true
 
 - name: Update root password
   mysql_user:
@@ -33,7 +32,6 @@
     state: present
   when: ansible_hostname != 'localhost'
   tags: mariadb
-  ignore_errors: true
 
 - name: Remove the test database
   mysql_db:
