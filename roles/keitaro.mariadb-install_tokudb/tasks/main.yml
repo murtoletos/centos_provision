@@ -32,4 +32,4 @@
 - name: Restart MariaDB service
   service:
     name: mariadb
-    state: restarted      
+    state: restarted
