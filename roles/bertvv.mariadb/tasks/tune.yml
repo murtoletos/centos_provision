@@ -15,11 +15,11 @@
 
 - name: Update root password
   mysql_user:
-    login_unix_socket: "{{ mariadb_socket }}"
     name: root
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
     state: present
+    login_unix_socket: "{{ mariadb_socket }}"
   with_items:
     - 127.0.0.1
     - ::1
