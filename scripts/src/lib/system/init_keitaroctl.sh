@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LOGS_TO_KEEP=10
+LOGS_TO_KEEP=5
 
 init_keitaroctl() {
   init_keitaroctl_dirs_and_links
@@ -17,20 +17,17 @@ init_keitaroctl_dirs_and_links() {
 }
 
 create_keitaroctl_dirs_and_links() {
-  if [[ "$EUID" == "$ROOT_UID" ]]; then
-    mkdir -p ${WORKING_DIR} ${LOG_DIR} ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} &&
-      ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
-      ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-      ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
-  else
-    mkdir -p ${WORKING_DIR} ${LOG_DIR}
-  fi
+  mkdir -p ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} ${WORKING_DIR} &&
+    chmod 0700 ${ETC_DIR} &&
+    ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
+    ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
+    ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
 }
 
 init_log() {
   save_previous_log
-  delete_old_logs
   create_log
+  delete_old_logs
 }
 
 save_previous_log() {
@@ -40,10 +37,11 @@ save_previous_log() {
   fi
 }
 
-delete_old_logs() {
-  find "${LOG_DIR}" -name "${LOG_FILENAME}-*" | sort | head -n -${LOGS_TO_KEEP} | xargs rm -f
+create_log() {
+  mkdir -p ${LOG_DIR}
+  > ${LOG_PATH}
 }
 
-create_log() {
-  > ${LOG_PATH}
+delete_old_logs() {
+  find "${LOG_DIR}" -name "${LOG_FILENAME}-*" | sort | head -n -${LOGS_TO_KEEP} | xargs rm -f
 }

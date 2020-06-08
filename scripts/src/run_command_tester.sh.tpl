@@ -46,6 +46,7 @@ test_run_command(){
   local run_as="${5}"
   local failed_logs_filter="${6}"
   UI_LANG=en
+  init
   run_command "${command}" "${message}" "${hide_output}" "${allow_errors}" "${run_as}" "${failed_logs_filter}"
 }
 

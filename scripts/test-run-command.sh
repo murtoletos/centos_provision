@@ -6,48 +6,51 @@ shopt -s lastpipe                     # flexible while loops (maintain scope)
 shopt -s extglob                      # regular expressions
 
 
-empty()
-{
-    [[ "${#1}" == 0 ]] && return 0 || return 1
-}
-
-isset ()
-{
-    [[ ! "${#1}" == 0 ]] && return 0 || return 1
-}
-
-on ()
-{
-    func="$1";
-    shift;
-    for sig in "$@";
-    do
-        trap "$func $sig" "$sig";
-    done
-}
-
-values ()
-{
-    echo "$2"
-}
-
-last ()
-{
-    [[ ! -n $1 ]] && return 1;
-    echo "$(eval "echo \${$1[@]:(-1)}")"
-}
-
-
-
-TOOL_NAME='test-run-command'
-
-SHELL_NAME=$(basename "$0")
-
 SUCCESS_RESULT=0
 TRUE=0
 FAILURE_RESULT=1
 FALSE=1
 ROOT_UID=0
+
+
+empty() {
+  [[ "${#1}" == 0 ]] && return ${SUCCESS_RESULT} || return ${FAILURE_RESULT}
+}
+
+isset() {
+  [[ ! "${#1}" == 0 ]] && return ${SUCCESS_RESULT} || return ${FAILURE_RESULT}
+}
+
+on() {
+  func="$1";
+  shift;
+  for sig in "$@";
+  do
+      trap "$func $sig" "$sig";
+  done
+}
+
+values() {
+  echo "$2"
+}
+
+last () {
+  [[ ! -n $1 ]] && return 1;
+  echo "$(eval "echo \${$1[@]:(-1)}")"
+}
+
+is_ci_mode() {
+  [[ "$EUID" != "$ROOT_UID" || "${CI}" != "" ]]
+}
+
+is_pipe_mode(){
+  [ "${SELF_NAME}" == 'bash' ]
+}
+
+
+TOOL_NAME='test-run-command'
+
+SELF_NAME=${0}
 
 KEITARO_URL="https://keitaro.io"
 
@@ -55,28 +58,32 @@ RELEASE_VERSION='2.12'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBAPP_ROOT="/var/www/keitaro"
+if is_ci_mode && is_pipe_mode; then
+  ROOT_PREFIX=".keitaro"
+elif is_ci_mode; then
+  echo "${SELF_NAME}"
+  ROOT_PREFIX="$(dirname ${SELF_NAME})/.keitaro"
+else
+  ROOT_PREFIX=""
+fi
 
-KEITAROCTL_ROOT="/opt/keitaro"
+WEBAPP_ROOT="${ROOT_PREFIX}/var/www/keitaro"
+
+KEITAROCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
 KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
 KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
 KEITAROCTL_ETC_DIR="${KEITAROCTL_ROOT}/etc"
 KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
 
-ETC_DIR=/etc/keitaro
+ETC_DIR="${ROOT_PREFIX}/etc/keitaro"
 
-if [[ "$EUID" == "$ROOT_UID" ]]; then
-  WORKING_DIR=/var/tmp/keitaro
-  INVENTORY_DIR="${ETC_DIR}/config"
-  LOG_DIR=/var/log/keitaro
-else
-  WORKING_DIR=".keitaro"
-  INVENTORY_DIR=".keitaro"
-  LOG_DIR="${WORKING_DIR}"
-fi
+WORKING_DIR="${ROOT_PREFIX}/var/tmp/keitaro"
+
+LOG_DIR="${ROOT_PREFIX}/var/log/keitaro"
 LOG_FILENAME="${TOOL_NAME}.log"
 LOG_PATH="${LOG_DIR}/${LOG_FILENAME}"
 
+INVENTORY_DIR="${ETC_DIR}/config"
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
@@ -86,15 +93,12 @@ NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
 
-CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
-CURRENT_COMMAND_ERROR_LOG="current_command.error.log"
+CURRENT_COMMAND_OUTPUT_LOG="${WORKING_DIR}/current_command.output.log"
+CURRENT_COMMAND_ERROR_LOG="${WORKING_DIR}/current_command.error.log"
 CURRENT_COMMAND_SCRIPT_NAME="current_command.sh"
 
 INDENTATION_LENGTH=2
 INDENTATION_SPACES=$(printf "%${INDENTATION_LENGTH}s")
-
-KEITAROCTL_ROOT="/opt/keitaro"
-KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
 
 if [[ "${TOOL_NAME}" == "install" ]]; then
   SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
@@ -288,7 +292,7 @@ init() {
   trap on_exit SIGHUP SIGINT SIGTERM
 }
 
-LOGS_TO_KEEP=10
+LOGS_TO_KEEP=5
 
 init_keitaroctl() {
   init_keitaroctl_dirs_and_links
@@ -305,20 +309,17 @@ init_keitaroctl_dirs_and_links() {
 }
 
 create_keitaroctl_dirs_and_links() {
-  if [[ "$EUID" == "$ROOT_UID" ]]; then
-    mkdir -p ${WORKING_DIR} ${LOG_DIR} ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} &&
-      ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
-      ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-      ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
-  else
-    mkdir -p ${WORKING_DIR} ${LOG_DIR}
-  fi
+  mkdir -p ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} ${WORKING_DIR} &&
+    chmod 0700 ${ETC_DIR} &&
+    ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
+    ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
+    ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
 }
 
 init_log() {
   save_previous_log
-  delete_old_logs
   create_log
+  delete_old_logs
 }
 
 save_previous_log() {
@@ -328,13 +329,15 @@ save_previous_log() {
   fi
 }
 
+create_log() {
+  mkdir -p ${LOG_DIR}
+  > ${LOG_PATH}
+}
+
 delete_old_logs() {
   find "${LOG_DIR}" -name "${LOG_FILENAME}-*" | sort | head -n -${LOGS_TO_KEEP} | xargs rm -f
 }
 
-create_log() {
-  > ${LOG_PATH}
-}
 log_and_print_err(){
   local message="${1}"
   print_err "$message" 'red'
@@ -357,7 +360,8 @@ print_content_of(){
   local filepath="${1}"
   if [ -f "$filepath" ]; then
     if [ -s "$filepath" ]; then
-      echo "Content of '${filepath}':\n$(cat "$filepath" | add_indentation)"
+      echo "Content of '${filepath}':"
+      cat "$filepath" | add_indentation
     else
       debug "File '${filepath}' is empty"
     fi
@@ -384,11 +388,6 @@ print_translated(){
     echo "$message"
   fi
 }
-#
-
-
-
-
 
 declare -A COLOR_CODE
 
@@ -411,7 +410,6 @@ COLOR_CODE['light.cyan']=96
 COLOR_CODE['light.grey']=37
 
 RESET_FORMATTING='\e[0m'
-
 
 print_with_color(){
   local message="${1}"
@@ -942,6 +940,7 @@ test_run_command(){
   local run_as="${5}"
   local failed_logs_filter="${6}"
   UI_LANG=en
+  init
   run_command "${command}" "${message}" "${hide_output}" "${allow_errors}" "${run_as}" "${failed_logs_filter}"
 }
 

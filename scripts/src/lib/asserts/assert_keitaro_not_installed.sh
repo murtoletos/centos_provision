@@ -18,7 +18,7 @@ assert_keitaro_not_installed(){
 
 is_keitaro_installed() {
    if should_use_new_algorithm_for_installation_check; then
-     debug "Current version is ${RELEASE_VERSION} - using new algorithm (check flag in the inventory file)"
+     debug "Current version is ${RELEASE_VERSION} - using new algorithm (check 'installed' flag in the inventory file)"
      isset "${VARS['installed']}"
    else
      debug "Current version is ${RELEASE_VERSION} - using old algorithm (check '${KEITARO_LOCK_FILEPATH}' file)"

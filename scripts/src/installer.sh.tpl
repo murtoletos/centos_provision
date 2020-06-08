@@ -25,7 +25,6 @@ _require 'lib/io/detect_mime_type.sh'
 _require 'lib/io/get_user_var.sh'
 _require 'lib/io/force_utf8_input.sh'
 _require 'lib/io/hack_stdin.sh'
-_require 'lib/io/is_pipe_mode.sh'
 _require 'lib/io/print_prompt.sh'
 _require 'lib/io/print_prompt_error.sh'
 _require 'lib/io/print_prompt_help.sh'
@@ -101,7 +100,6 @@ _require 'app/installer/stage6/json2dict.sh'
 #   http://blog.existentialize.com/dont-pipe-to-your-shell.html
 
 install(){
-  init_keitaroctl
   init "$@"
   stage1 "$@"               # initial script setup
   stage2                    # make some asserts

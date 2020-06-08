@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-SHELL_NAME=$(basename "$0")
-
-SUCCESS_RESULT=0
-TRUE=0
-FAILURE_RESULT=1
-FALSE=1
-ROOT_UID=0
+SELF_NAME=${0}
 
 KEITARO_URL="https://keitaro.io"
 
@@ -14,28 +8,31 @@ RELEASE_VERSION='2.12'
 DEFAULT_BRANCH="master"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
-WEBAPP_ROOT="/var/www/keitaro"
+if is_ci_mode && is_pipe_mode; then
+  ROOT_PREFIX=".keitaro"
+elif is_ci_mode; then
+  ROOT_PREFIX="$(dirname ${SELF_NAME})/.keitaro"
+else
+  ROOT_PREFIX=""
+fi
 
-KEITAROCTL_ROOT="/opt/keitaro"
+WEBAPP_ROOT="${ROOT_PREFIX}/var/www/keitaro"
+
+KEITAROCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
 KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
 KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
 KEITAROCTL_ETC_DIR="${KEITAROCTL_ROOT}/etc"
 KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
 
-ETC_DIR=/etc/keitaro
+ETC_DIR="${ROOT_PREFIX}/etc/keitaro"
 
-if [[ "$EUID" == "$ROOT_UID" ]]; then
-  WORKING_DIR=/var/tmp/keitaro
-  INVENTORY_DIR="${ETC_DIR}/config"
-  LOG_DIR=/var/log/keitaro
-else
-  WORKING_DIR=".keitaro"
-  INVENTORY_DIR=".keitaro"
-  LOG_DIR="${WORKING_DIR}"
-fi
+WORKING_DIR="${ROOT_PREFIX}/var/tmp/keitaro"
+
+LOG_DIR="${ROOT_PREFIX}/var/log/keitaro"
 LOG_FILENAME="${TOOL_NAME}.log"
 LOG_PATH="${LOG_DIR}/${LOG_FILENAME}"
 
+INVENTORY_DIR="${ETC_DIR}/config"
 INVENTORY_PATH="${INVENTORY_DIR}/inventory"
 DETECTED_INVENTORY_PATH=""
 
@@ -45,15 +42,12 @@ NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
 SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
 
-CURRENT_COMMAND_OUTPUT_LOG="current_command.output.log"
-CURRENT_COMMAND_ERROR_LOG="current_command.error.log"
+CURRENT_COMMAND_OUTPUT_LOG="${WORKING_DIR}/current_command.output.log"
+CURRENT_COMMAND_ERROR_LOG="${WORKING_DIR}/current_command.error.log"
 CURRENT_COMMAND_SCRIPT_NAME="current_command.sh"
 
 INDENTATION_LENGTH=2
 INDENTATION_SPACES=$(printf "%${INDENTATION_LENGTH}s")
-
-KEITAROCTL_ROOT="/opt/keitaro"
-KEITAROCTL_BIN_PATH="${KEITAROCTL_ROOT}/bin"
 
 if [[ "${TOOL_NAME}" == "install" ]]; then
   SCRIPT_URL="${KEITARO_URL}/${TOOL_NAME}.sh"
