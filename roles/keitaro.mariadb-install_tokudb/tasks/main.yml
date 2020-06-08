@@ -5,8 +5,8 @@
     tokudb_version: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
 
 #get version before last dot (tokudb version 10.x.xx this task capture only 10.x)
-- set_fact: 
-    tokudb_short_version: "{{ tokudb_version.stdout | regex_search('.*(?=\\.)') }}"
+#- set_fact: 
+#    tokudb_short_version: "{{ tokudb_version.stdout | regex_search('.*(?=\\.)') }}"
 
 - name: Install TokuDB Engine
   package:
