@@ -4,6 +4,11 @@
 - set_fact:
     mariadb_version_output: "{{ mysql_version_output.stdout | regex_search('(?<=Distrib )(.*)(?=-MariaDB)') }}"
 
+- name: remove old mariadb repo
+  file:
+    path: /etc/yum.repos.d/mariadb.repo
+    state: absent
+
 - name: remove old maria Centos 7
   package:
     name: "{{ item }}"
