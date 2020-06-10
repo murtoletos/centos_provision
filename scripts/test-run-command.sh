@@ -61,7 +61,6 @@ BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 if is_ci_mode && is_pipe_mode; then
   ROOT_PREFIX=".keitaro"
 elif is_ci_mode; then
-  echo "${SELF_NAME}"
   ROOT_PREFIX="$(dirname ${SELF_NAME})/.keitaro"
 else
   ROOT_PREFIX=""
@@ -331,7 +330,11 @@ save_previous_log() {
 
 create_log() {
   mkdir -p ${LOG_DIR}
-  > ${LOG_PATH}
+  if [[ "${TOOL_NAME}" == "install" ]] && ! is_ci_mode; then
+    (umask 066 && touch "${LOG_PATH}")
+  else
+    touch "${LOG_PATH}"
+  fi
 }
 
 delete_old_logs() {

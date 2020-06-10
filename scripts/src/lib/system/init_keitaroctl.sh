@@ -39,7 +39,11 @@ save_previous_log() {
 
 create_log() {
   mkdir -p ${LOG_DIR}
-  > ${LOG_PATH}
+  if [[ "${TOOL_NAME}" == "install" ]] && ! is_ci_mode; then
+    (umask 066 && touch "${LOG_PATH}")
+  else
+    touch "${LOG_PATH}"
+  fi
 }
 
 delete_old_logs() {
