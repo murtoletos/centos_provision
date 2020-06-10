@@ -2,26 +2,26 @@
 
 LOGS_TO_KEEP=5
 
-init_keitaroctl() {
-  init_keitaroctl_dirs_and_links
+init_kctl() {
+  init_kctl_dirs_and_links
   init_log
 }
 
-init_keitaroctl_dirs_and_links() {
-  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
-    if ! create_keitaroctl_dirs_and_links; then
+init_kctl_dirs_and_links() {
+  if [[ ! -d ${KCTL_ROOT} ]]; then
+    if ! create_kctl_dirs_and_links; then
       echo "Can't create keitaro directories" >&2
       exit 1
     fi
   fi
 }
 
-create_keitaroctl_dirs_and_links() {
-  mkdir -p ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} ${WORKING_DIR} &&
+create_kctl_dirs_and_links() {
+  mkdir -p ${INVENTORY_DIR} ${KCTL_BIN_DIR} ${WORKING_DIR} &&
     chmod 0700 ${ETC_DIR} &&
-    ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
-    ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-    ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
+    ln -s ${ETC_DIR} ${KCTL_ETC_DIR} &&
+    ln -s ${LOG_DIR} ${KCTL_LOG_DIR} &&
+    ln -s ${WORKING_DIR} ${KCTL_WORKING_DIR}
 }
 
 init_log() {

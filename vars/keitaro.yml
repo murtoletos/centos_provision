@@ -13,7 +13,7 @@ keitaro_installer_version: "{{ lookup('file', 'RELEASE_VERSION') }}"
 keitaro_release: 9
 keitaro_url: "https://keitaro.io"
 
-keitaroctl_root: /opt/keitaro
-keitaroctl_bin_dir: "{{ keitaroctl_root }}/bin"
-keitaroctl_tools_url: "https://github.com/apliteni/centos_provision/raw/current/scripts"
-keitaroctl_tool_names: [install, enable-ssl, delete-ssl, add-site]
+kctl_root: /opt/keitaro
+kctl_bin_dir: "{{ kctl_root }}/bin"
+kctl_tools_url: "https://github.com/apliteni/centos_provision/raw/current/scripts"
+kctl_tool_names: [install, enable-ssl, delete-ssl, add-site]

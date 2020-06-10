@@ -68,11 +68,11 @@ fi
 
 WEBAPP_ROOT="${ROOT_PREFIX}/var/www/keitaro"
 
-KEITAROCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
-KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
-KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
-KEITAROCTL_ETC_DIR="${KEITAROCTL_ROOT}/etc"
-KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
+KCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
+KCTL_BIN_DIR="${KCTL_ROOT}/bin"
+KCTL_LOG_DIR="${KCTL_ROOT}/log"
+KCTL_ETC_DIR="${KCTL_ROOT}/etc"
+KCTL_WORKING_DIR="${KCTL_ROOT}/tmp"
 
 ETC_DIR="${ROOT_PREFIX}/etc/keitaro"
 
@@ -90,7 +90,7 @@ NGINX_CONFIG_ROOT="/etc/nginx"
 NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
-SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
+SCRIPT_NAME="kctl-${TOOL_NAME}"
 
 CURRENT_COMMAND_OUTPUT_LOG="${WORKING_DIR}/current_command.output.log"
 CURRENT_COMMAND_ERROR_LOG="${WORKING_DIR}/current_command.error.log"
@@ -651,7 +651,7 @@ help_en_common(){
 }
 
 init() {
-  init_keitaroctl
+  init_kctl
   force_utf8_input
   debug "Starting init stage: log basic info"
   debug "Command: ${SCRIPT_COMMAND}"
@@ -663,26 +663,26 @@ init() {
 
 LOGS_TO_KEEP=5
 
-init_keitaroctl() {
-  init_keitaroctl_dirs_and_links
+init_kctl() {
+  init_kctl_dirs_and_links
   init_log
 }
 
-init_keitaroctl_dirs_and_links() {
-  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
-    if ! create_keitaroctl_dirs_and_links; then
+init_kctl_dirs_and_links() {
+  if [[ ! -d ${KCTL_ROOT} ]]; then
+    if ! create_kctl_dirs_and_links; then
       echo "Can't create keitaro directories" >&2
       exit 1
     fi
   fi
 }
 
-create_keitaroctl_dirs_and_links() {
-  mkdir -p ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} ${WORKING_DIR} &&
+create_kctl_dirs_and_links() {
+  mkdir -p ${INVENTORY_DIR} ${KCTL_BIN_DIR} ${WORKING_DIR} &&
     chmod 0700 ${ETC_DIR} &&
-    ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
-    ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-    ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
+    ln -s ${ETC_DIR} ${KCTL_ETC_DIR} &&
+    ln -s ${LOG_DIR} ${KCTL_LOG_DIR} &&
+    ln -s ${WORKING_DIR} ${KCTL_WORKING_DIR}
 }
 
 init_log() {
@@ -1311,7 +1311,7 @@ DICT['en.messages.check_keitaro_dump_validity']="Checking SQL dump"
 DICT['en.messages.successful.use_old_credentials']="The database was successfully restored from the archive. Use old login data"
 DICT['en.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	You can install free SSL certificates with the following command
-	keitaroctl-enable-ssl -D domain1.com,domain2.com
+	kctl-enable-ssl -D domain1.com,domain2.com
 END
 )
 DICT['en.errors.see_logs']=$(cat <<- END
@@ -1360,7 +1360,7 @@ DICT['ru.messages.check_keitaro_dump_validity']="Проверяем SQL дамп
 DICT["ru.messages.successful.use_old_credentials"]="База данных успешно восстановлена из архива. Используйте старые данные для входа в систему"
 DICT['ru.messages.successful.how_to_enable_ssl']=$(cat <<- END
 	Вы можете установить бесплатные SSL сертификаты, выполнив следующую команду:
-	keitaroctl-enable-ssl -D domain1.com,domain2.com -L ru
+	kctl-enable-ssl -D domain1.com,domain2.com -L ru
 END
 )
 DICT['ru.errors.see_logs']=$(cat <<- END

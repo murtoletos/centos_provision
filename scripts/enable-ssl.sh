@@ -67,11 +67,11 @@ fi
 
 WEBAPP_ROOT="${ROOT_PREFIX}/var/www/keitaro"
 
-KEITAROCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
-KEITAROCTL_BIN_DIR="${KEITAROCTL_ROOT}/bin"
-KEITAROCTL_LOG_DIR="${KEITAROCTL_ROOT}/log"
-KEITAROCTL_ETC_DIR="${KEITAROCTL_ROOT}/etc"
-KEITAROCTL_WORKING_DIR="${KEITAROCTL_ROOT}/tmp"
+KCTL_ROOT="${ROOT_PREFIX}/opt/keitaro"
+KCTL_BIN_DIR="${KCTL_ROOT}/bin"
+KCTL_LOG_DIR="${KCTL_ROOT}/log"
+KCTL_ETC_DIR="${KCTL_ROOT}/etc"
+KCTL_WORKING_DIR="${KCTL_ROOT}/tmp"
 
 ETC_DIR="${ROOT_PREFIX}/etc/keitaro"
 
@@ -89,7 +89,7 @@ NGINX_CONFIG_ROOT="/etc/nginx"
 NGINX_VHOSTS_DIR="${NGINX_CONFIG_ROOT}/conf.d"
 NGINX_KEITARO_CONF="${NGINX_VHOSTS_DIR}/keitaro.conf"
 
-SCRIPT_NAME="keitaroctl-${TOOL_NAME}"
+SCRIPT_NAME="kctl-${TOOL_NAME}"
 
 CURRENT_COMMAND_OUTPUT_LOG="${WORKING_DIR}/current_command.output.log"
 CURRENT_COMMAND_ERROR_LOG="${WORKING_DIR}/current_command.error.log"
@@ -669,7 +669,7 @@ fail(){
 }
 
 init() {
-  init_keitaroctl
+  init_kctl
   force_utf8_input
   debug "Starting init stage: log basic info"
   debug "Command: ${SCRIPT_COMMAND}"
@@ -681,26 +681,26 @@ init() {
 
 LOGS_TO_KEEP=5
 
-init_keitaroctl() {
-  init_keitaroctl_dirs_and_links
+init_kctl() {
+  init_kctl_dirs_and_links
   init_log
 }
 
-init_keitaroctl_dirs_and_links() {
-  if [[ ! -d ${KEITAROCTL_ROOT} ]]; then
-    if ! create_keitaroctl_dirs_and_links; then
+init_kctl_dirs_and_links() {
+  if [[ ! -d ${KCTL_ROOT} ]]; then
+    if ! create_kctl_dirs_and_links; then
       echo "Can't create keitaro directories" >&2
       exit 1
     fi
   fi
 }
 
-create_keitaroctl_dirs_and_links() {
-  mkdir -p ${INVENTORY_DIR} ${KEITAROCTL_BIN_DIR} ${WORKING_DIR} &&
+create_kctl_dirs_and_links() {
+  mkdir -p ${INVENTORY_DIR} ${KCTL_BIN_DIR} ${WORKING_DIR} &&
     chmod 0700 ${ETC_DIR} &&
-    ln -s ${ETC_DIR} ${KEITAROCTL_ETC_DIR} &&
-    ln -s ${LOG_DIR} ${KEITAROCTL_LOG_DIR} &&
-    ln -s ${WORKING_DIR} ${KEITAROCTL_WORKING_DIR}
+    ln -s ${ETC_DIR} ${KCTL_ETC_DIR} &&
+    ln -s ${LOG_DIR} ${KCTL_LOG_DIR} &&
+    ln -s ${WORKING_DIR} ${KCTL_WORKING_DIR}
 }
 
 init_log() {
