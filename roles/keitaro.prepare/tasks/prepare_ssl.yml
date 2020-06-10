@@ -3,6 +3,11 @@
     name: certbot
     state: installed
   when: rhel_version == 8
+  
+- name: remove old Certbot package
+  package:
+    name: certbot
+    state: absent  
 
 - name: Create directory for ssl certs
   file:
