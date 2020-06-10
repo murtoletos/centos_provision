@@ -17,3 +17,8 @@
 
 - name: Remove old root cron.php task
   shell: 'sed -i /cron.php/d /var/spool/cron/root'
+
+- name: Remove old packages
+  package:
+    name: certbot
+    state: absent
