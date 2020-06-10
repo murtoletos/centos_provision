@@ -1,6 +1,6 @@
 - name: Add enable_ssl command to sudoers to run from PHP
   copy:
-    content: >
+    content: |
       Cmnd_Alias KEITAROCTL = /opt/keitaro/bin/keitaroctl-enable-ssl *
       {{ keitaro_user }} ALL=(ALL) NOPASSWD: KEITAROCTL
     dest: /etc/sudoers.d/99-allow-keitaroctl-commands
