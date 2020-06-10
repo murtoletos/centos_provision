@@ -1,13 +1,22 @@
-- name: install packages
-  dnf:
-    name: certbot
-    state: installed
-  when: rhel_version == 8
+- name: download certbot-auto
+  get_url:
+    url: "{{ certbot_url }}"
+    dest: "{{ certbot_dir }}/certbot"
+    mode: '0755'
+    owner: "root"
+    force: yes
   
-- name: remove old Certbot package
-  package:
-    name: certbot
-    state: absent  
+- name: install certbot-auto
+  shell: cd {{ certbot_dir }} && ./certbot --install-only --non-interactive
+  
+- name: Set Certbot script variable.
+  set_fact:
+    certbot_script: "{{ certbot_dir }}/certbot"
+
+- name: Ensure certbot-auto is executable.
+  file:
+    path: "{{ certbot_script }}"
+    mode: 0755
 
 - name: Create directory for ssl certs
   file:
