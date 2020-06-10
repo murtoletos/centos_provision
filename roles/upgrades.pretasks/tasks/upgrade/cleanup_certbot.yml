@@ -1,9 +1,0 @@
-- name: remove old Certbot package
-  package:
-    name: certbot
-    state: absent
-
-- name: remove old Certbot
-  file:
-    path: "{{ certbot_dir }}/certbot"
-    state: absent  

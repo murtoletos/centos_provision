@@ -32,3 +32,8 @@
   file:
     path: /etc/keitaro/roadrunner.yml
     state: absent
+    
+- name: remove old Certbot package
+  package:
+    name: certbot
+    state: absent
