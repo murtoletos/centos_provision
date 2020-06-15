@@ -7,7 +7,7 @@
   replace:
     path: /etc/systemd/journald.conf
     regexp: '#Storage=auto'
-    replace: 'Storage=auto'
+    replace: 'Storage=persistent'
 
 - name: Create journal service
   shell: |
