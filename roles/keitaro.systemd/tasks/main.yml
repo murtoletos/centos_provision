@@ -3,6 +3,12 @@
     path: /var/log/journal
     state: directory
 
+- name: Uncomment config line
+  replace:
+    path: /etc/systemd/journald.conf
+    regexp: '#Storage=auto'
+    replace: 'Storage=auto'
+
 - name: Create journal service
   shell: |
     systemd-tmpfiles --create --prefix /var/log/journal
@@ -13,9 +19,3 @@
     name: systemd-journald
     state: started
     enabled: yes
-
-- name: Uncomment config line
-  replace:
-    path: /etc/systemd/journald.conf
-    regexp: '#Storage=auto'
-    replace: 'Storage=auto'
