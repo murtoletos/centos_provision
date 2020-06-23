@@ -8,3 +8,5 @@
   
 - include: cleanup_mariadb.yml
   tags: [ 'never', 'update_mariadb' ]
+
+- include: remove_sendmail.yml
