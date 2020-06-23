@@ -10,9 +10,9 @@
     regexp: "^{{ item.name }} ="
   with_items:
     - name: inet_interfaces
-      value: localhost
+      value: "localhost"
     - name: inet_protocols
-      value: all
+      value: "ipv4"
   notify: restart postfix
 
 - name: Ensure postfix is started and enabled at boot.
