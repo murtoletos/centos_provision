@@ -24,7 +24,6 @@
     - {role: 'geerlingguy.repo-remi', tags: 'repo-remi'}
     - {role: 'keitaro.systemd', tags: 'systemd, upgrade'}
     - {role: 'keitaro.disable_thp', tags: 'mariadb, tokudb, redis, upgrade'}
-    - {role: 'keitaro.mail', tags: 'mail'}
     - {role: 'keitaro.redis', tags: 'redis'}
     - {role: 'keitaro.redis-tune', tags: 'redis, tune, redis-tune, upgrade'}
     - {role: 'keitaro.mariadb', tags: 'mariadb, upgrade'}
