@@ -1,12 +1,7 @@
-- name: Create directory for ssl certs
-  file:
-    path: "{{ openssl_dir}}"
-    state: directory
-  
 - name: Unarchive a file that needs to be downloaded (added in 2.0)
   unarchive:
     src: https://ftp.openssl.org/source/old/1.1.1/openssl-1.1.1.tar.gz
-    dest: "{{ openssl_dir }}"
+    dest: /usr/bin
     remote_src: yes
     list_files: yes
   register: archive_contents
