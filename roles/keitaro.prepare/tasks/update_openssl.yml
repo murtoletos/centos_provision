@@ -10,6 +10,10 @@
     dest: "{{ openssl_tmp_dir.path }}"
     remote_src: yes
 
+- name: Build the default target
+  make:
+    chdir: "{{ openssl_tmp_dir.path }}"
+
 - name: Run make install
   make:
     chdir: "{{ openssl_tmp_dir.path }}"
