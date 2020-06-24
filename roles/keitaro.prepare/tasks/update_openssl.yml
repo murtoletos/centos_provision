@@ -1,14 +1,15 @@
-- name: Create directory for openssl
-  file:
-    path: "{{ openssl_dir }}"
+- name: create temporary build directory
+  tempfile:
     state: directory
+    suffix: build
+  register: openssl_tmp_dir  
 
-- name: Download and unarchive openssl
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
   unarchive:
     src: https://ftp.openssl.org/source/old/1.1.1/openssl-1.1.1.tar.gz
-    dest: "{{ openssl_dir }}"
+    dest: "{{ openssl_tmp_dir.path }}"
     remote_src: yes
-    
+
 - name: Install openssl
   shell: |
     cd {{ openssl_dir }}
@@ -19,3 +20,7 @@
     export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
     echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
 
+- name: use the registered var and the file module to remove the temporary file
+  file:
+    path: "{{ openssl_tmp_dir.path }}"
+    state: absent
