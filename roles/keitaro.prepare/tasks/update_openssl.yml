@@ -1,23 +1,12 @@
-- name: create temporary build directory
-  tempfile:
-    state: directory
-    suffix: build
-  register: openssl_tmp_dir  
-
-- name: Unarchive a file that needs to be downloaded (added in 2.0)
+- name: Download and unarchive openssl
   unarchive:
     src: https://ftp.openssl.org/source/old/1.1.1/openssl-1.1.1.tar.gz
-    dest: "{{ openssl_tmp_dir.path }}"
+    dest: "{{ openssl_dir }}"
     remote_src: yes
-
-- name: Remove previous version
-  package:
-    name: openssl
-    state: absent
 
 - name: Install openssl
   shell: |
-    cd {{ openssl_tmp_dir.path }}
+    cd {{ openssl_dir }}
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
     make
     make test
@@ -27,5 +16,5 @@
 
 - name: use the registered var and the file module to remove the temporary file
   file:
-    path: "{{ openssl_tmp_dir.path }}"
+    path: "{{ openssl_dir }}"
     state: absent
