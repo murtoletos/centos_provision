@@ -9,10 +9,10 @@
 - name: Install openssl
   command: "{{ item }}"
   with_items:
-    - cd {{ archive_contents.files[0] }} | \
-    - ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic | \
-    - make | \
-    - make test | \
-    - make install | \
-    - export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 | \
+    - cd /usr/local/bin/{{ archive_contents.files[0] }} 
+    - ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic 
+    - make 
+    - make test 
+    - make install 
+    - export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 
     - echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
