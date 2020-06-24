@@ -8,4 +8,4 @@
   
 - include: cleanup_mariadb.yml
   when: "'update_mariadb' in ansible_run_tags"
-  tags: ['never, update_mariadb']
+  tags: ['never', 'update_mariadb']
