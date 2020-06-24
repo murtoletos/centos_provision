@@ -6,4 +6,4 @@ kernel_sysctl_tweaks:
 certbot_url: https://dl.eff.org/certbot-auto
 certbot_dir: /usr/bin
 
-openssl_dir: /usr/bin/openssl
+openssl_dir: /usr/bin/openssl_tmp_dir
