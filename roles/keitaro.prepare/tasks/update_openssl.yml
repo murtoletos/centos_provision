@@ -1,7 +1,7 @@
 - name: Unarchive a file that needs to be downloaded (added in 2.0)
   unarchive:
     src: https://ftp.openssl.org/source/old/1.1.1/openssl-1.1.1.tar.gz
-    dest: /usr/bin
+    dest: /usr/local/bin/
     remote_src: yes
     list_files: yes
   register: archive_contents
@@ -15,8 +15,3 @@
     make install | \
     export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 | \
     echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc | \
-
-- name: use the registered var and the file module to remove the temporary file
-  file:
-    path: "{{ archive_contents.files[0] }}"
-    state: absent
