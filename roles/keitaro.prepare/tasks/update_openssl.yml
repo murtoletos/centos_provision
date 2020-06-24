@@ -10,17 +10,13 @@
     dest: "{{ openssl_tmp_dir.path }}"
     remote_src: yes
 
-- name: Build the default target
-  make:
-    chdir: "{{ openssl_tmp_dir.path }}"
-
-- name: Run make install
-  make:
-    chdir: "{{ openssl_tmp_dir.path }}"
-    target: install
-    
-- name: Exports
+- name: Install openssl
   shell: |
+    cd "{{ openssl_tmp_dir.path }}"
+    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
+    make
+    make test
+    make install
     export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
     echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
 
