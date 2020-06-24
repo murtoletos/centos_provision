@@ -7,14 +7,14 @@
   register: archive_contents
 
 - name: Install openssl
-  shell: |
-    cd {{ archive_contents.files[0] }}
-    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
-    make
-    make test
-    make install
-    export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
-    echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
+  shell: >
+    cd {{ archive_contents.files[0] }} | \
+    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic | \
+    make | \
+    make test | \
+    make install | \
+    export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 | \
+    echo "export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64" >> ~/.bashrc | \
 
 - name: use the registered var and the file module to remove the temporary file
   file:
