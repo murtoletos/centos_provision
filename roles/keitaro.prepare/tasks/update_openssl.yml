@@ -12,7 +12,7 @@
 
 - name: Install openssl
   shell: |
-    cd "{{ openssl_tmp_dir.path }}"
+    cd {{ openssl_tmp_dir.path }}
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
     make
     make test
