@@ -10,6 +10,10 @@
     dest: "{{ openssl_tmp_dir.path }}"
     remote_src: yes
 
+- name: Unintall previous version
+  package: openssl
+    state: absent
+
 - name: Install openssl
   shell: |
     cd {{ openssl_tmp_dir.path }}
