@@ -11,7 +11,7 @@
 
 - name: Install openssl
   command: "{{ item }}"
-    with_items:
+  with_items:
     - cd {{ openssl_dir }}
     - ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic
     - make
