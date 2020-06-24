@@ -7,9 +7,8 @@
   register: archive_contents
 
 - name: Install openssl
-  command: "{{ item }}"
+  command: chdir=/usr/local/bin/{{ archive_contents.files[0] }} {{ item }}
   with_items:
-    - cd /usr/local/bin/{{ archive_contents.files[0] }} 
     - ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic 
     - make 
     - make test 
