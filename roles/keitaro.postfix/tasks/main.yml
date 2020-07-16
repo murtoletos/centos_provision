@@ -15,16 +15,6 @@
       value: ipv4
   notify: restart postfix
 
-- name: Check if hostname contains only numbers
-  set_fact:
-    hostname_output: "{{ lookup('file', '/etc/hostname') }}"
-
-- name: set domainname to localhost.localdomain
-  lineinfile:
-    path: /etc/selinux/config
-    regexp: '^#myorigin'
-    line: 'myorigin = localhost.localdomain'
-    
 - name: test
   shell: "hostname {{ hostname_output }}a"
 
