@@ -1,0 +1,163 @@
+# Shared
+before_script:
+  - source ci/bin/prepare_envs
+
+variables:
+  BUILDS_FOLDER: builds
+  GIT_URL: "git@gitlab.x.apli.tech:apliteni/keitaro/installer.git"
+  LOCAL_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_REF_NAME}"
+  REMOTE_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_REF_NAME}"
+  NIGHTLY_BUILD_PATH: "builds/${CI_COMMIT_REF_NAME}"
+  LATEST_BUILD_PATH: "latest"
+  BUILDS_TTL: 5d
+
+# Stages
+stages:
+  - build
+  - quality_checks
+  - upload
+  - release
+  - post_release
+  - actions
+
+# Build jobs
+build_scripts:
+  tags: [shell]
+  stage: build
+  interruptible: true
+  script:
+    - ci/bin/build/build_scripts
+    - ci/bin/testing/validate_scripts
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - scripts/*.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$ACTION == "prune"'
+      when: never
+    - when: always
+
+# Quality checks
+run_rspec:
+  stage: quality_checks
+  interruptible: true
+  tags: [ruby]
+  script:
+    - ci/bin/testing/validate_scripts
+    - ci/bin/testing/install_bundle
+    - ci/bin/testing/run_rspec
+  cache:
+    key: vendor
+    paths:
+      - scripts/vendor/
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "INST-132"' # TODO!
+      when: never
+    - if: '$ACTION == "prune"'
+      when: never
+    - when: on_success
+
+# Deployment jobs
+upload_build:
+  stage: upload
+  tags: [docker]
+  image: apliteni/mc
+  script:
+    - "source ci/bin/deployment/export_deployment_envs ${CI_COMMIT_REF_NAME} builds/${CI_COMMIT_REF_NAME}"
+    - "ci/bin/build/inject_installer_vars ${CI_COMMIT_REF_NAME} ${BUILD_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${NIGHTLY_BUILD_PATH}"
+    - "ci/bin/notify \"${NOTIFICATION_TEXT}\""
+  allow_failure: false
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$ACTION == "prune"'
+      when: never
+    - when: on_success
+
+# Release
+release!:
+  stage: release
+  tags: [shell]
+  script:
+    - ci/bin/release/allow_git_push
+    - ci/bin/release/tag_commit
+  allow_failure: false
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$ACTION == "prune"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
+      when: manual
+    - if: '$CI_COMMIT_REF_NAME == "INST-132"' # TODO!
+      when: on_success
+    - if: '$ACTION == "build"'
+      when: on_success
+    - when: never
+
+# Post release jobs
+.post-release-common:
+  stage: post_release
+  tags: [docker]
+  image: apliteni/mc
+  allow_failure: false
+  dependencies:
+    - build_scripts
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$ACTION == "prune"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
+      when: manual
+    - if: '$CI_COMMIT_REF_NAME == "INST-132"' # TODO!
+      when: on_success
+    - if: '$ACTION == "build"'
+      when: on_success
+    - when: never
+
+upload_as_release:
+  extends: [.post-release-common]
+  script:
+    - "source ci/bin/deployment/export_deployment_envs ${RELEASE_VERSION} ${RELEASE_VERSION}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${BUILD_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${RELEASE_VERSION}/"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
+    - "ci/bin/notify \"${NOTIFICATION_TEXT}\""
+
+upload_as_latest:
+  extends: [.post-release-common]
+  script:
+    - "source ci/bin/deployment/export_deployment_envs ${LATEST_BUILD_PATH}"
+    - "ci/bin/build/inject_installer_vars ${RELEASE_VERSION} ${BUILD_URL}"
+    - "ci/bin/build/pack"
+    - "ci/bin/deployment/prepare_mc"
+    - "ci/bin/deployment/upload ${LOCAL_BUILD_PATH} ${S3_BUCKET}/${LATEST_BUILD_PATH}"
+
+# Actions
+prune_files:
+  stage: actions
+  tags: [docker]
+  image: apliteni/mc
+  allow_failure: false
+  script:
+    - ci/bin/prune_old_file 4 5
+    - "ci/bin/maintenance/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
+  only:
+    variables:
+      - $ACTION == 'prune'
