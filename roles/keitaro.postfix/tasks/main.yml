@@ -23,7 +23,7 @@
   lineinfile:
     path: /etc/selinux/config
     regexp: '^#myorigin'
-    line: 'mydomain = localhost.localdomain'
+    line: 'myorigin = localhost.localdomain'
 
 - name: Ensure postfix is started and enabled at boot.
   service:
