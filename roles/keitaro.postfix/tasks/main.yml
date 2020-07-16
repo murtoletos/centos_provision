@@ -15,10 +15,14 @@
       value: ipv4
   notify: restart postfix
 
+- name: Check if hostname contains only numbers
+  set_fact:
+    hostname_output: "{{ lookup('file', '/etc/hostname') }}"
+
 - name: set domainname to localhost.localdomain
   lineinfile:
     path: /etc/selinux/config
-    regexp: '^#mydomain'
+    regexp: '^#myorigin'
     line: 'mydomain = localhost.localdomain'
 
 - name: Ensure postfix is started and enabled at boot.
