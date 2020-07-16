@@ -15,6 +15,12 @@
       value: ipv4
   notify: restart postfix
 
+- name: set domainname to localhost.localdomain
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^#mydomain'
+    line: 'mydomain = localhost.localdomain'
+
 - name: Ensure postfix is started and enabled at boot.
   service:
     name: postfix
