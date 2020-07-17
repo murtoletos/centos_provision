@@ -22,6 +22,9 @@
 - name: Check if hostname contains only numbers
   shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo true"
   register: hostname_only_digits
+  
+- debug:
+    msg: {{ hostname_only_digits }}
 
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
