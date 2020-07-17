@@ -24,11 +24,11 @@
   register: hostname_only_digits
   
 - debug:
-    msg: "{{ hostname_only_digits }}"
+    msg: "{{ hostname_only_digits.stdout }}"
 
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
-  when: hostname_only_digits.stdout  == 'true'
+  when: hostname_only_digits.stdout  == "true" 
 
 - name: Ensure postfix is started and enabled at boot.
   service:
