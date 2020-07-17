@@ -16,9 +16,7 @@
   notify: restart postfix
 
 - name: set hostname to variable
-  set_fact:
-    hostname_output: "{{ lookup('file', '/etc/hostname') }}"
-  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo true"
+  shell: "[[ {{ lookup('file', '/etc/hostname') }} =~ [^[:digit:]] ]] || echo true"
   register: hostname_only_digits
 
 - name: test
