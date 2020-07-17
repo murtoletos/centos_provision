@@ -20,12 +20,12 @@
     hostname_output: "{{ lookup('file', '/etc/hostname') }}"
 
 - name: Check if hostname contains only numbers
-  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo yes"
+  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo 1"
   register: hostname_only_digits
 
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
-  when: "{{ hostname_only_digits }} == yes"
+  when: {{ hostname_only_digits }} == 1
 
 - name: Ensure postfix is started and enabled at boot.
   service:
