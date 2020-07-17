@@ -27,6 +27,3 @@
     name: postfix
     state: started
     enabled: true
-
-- name: test
-  shell: "hostname {{ hostname_output }}"
