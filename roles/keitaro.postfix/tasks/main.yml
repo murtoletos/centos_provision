@@ -15,12 +15,15 @@
       value: ipv4
   notify: restart postfix
 
-- name: Check if hostname contains only numbers
+- name: set hostname to variable
   set_fact:
     hostname_output: "{{ lookup('file', '/etc/hostname') }}"
+  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo true"
+  register: hostname_only_digits
 
 - name: test
   shell: "hostname {{ hostname_output }}a"
+  when: "{{ hostname_only_digits }} == true"
 
 - name: Ensure postfix is started and enabled at boot.
   service:
