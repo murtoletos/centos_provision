@@ -20,10 +20,10 @@
     hostname_output: "{{ lookup('file', '/etc/hostname') }}"
 
 - name: Check if hostname contains only numbers
-  shell: "[[ hostname_output }} =~ [^[:digit:]] ]] || echo true"
+  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo true"
   register: hostname_only_digits
 
-- name: test
+- name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
   when: "{{ hostname_only_digits }} == true"
 
