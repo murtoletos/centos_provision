@@ -19,5 +19,6 @@ then
       exit 1;
 fi
 
-
-mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${REMOTE_BUILD_PATH}/" --overwrite
+zip -r "${RELEASE_FOLDER}/stable/playbook.zip" roles **/*.yml *.cfg *.txt
+mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/${RELEASE_VERSION}/" --overwrite
+mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/stable/" --overwrite
