@@ -96,7 +96,7 @@ deploy:
     - if: '$CI_COMMIT_REF_NAME == "INST-126"'
       when: always
     - if: '$CI_COMMIT_REF_NAME == "INST-189"'
-      when: always  
+      when: manual
     - if: '$ACTION == "build"'
       when: always
     - when: never
