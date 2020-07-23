@@ -19,13 +19,13 @@ then
       exit 1;
 fi
 
-if [[ "$BRANCH_NAME" =~ "(INST-)" ]]
+if [[ "$BRANCH_NAME" =~ [^INST-[:digit:]] ]]
 then
       echo 'test inst branch'  
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/test/" --overwrite;
 fi
 
-if [[ "$BRANCH_NAME" =~ "(master)" ]]
+if [[ "$BRANCH_NAME" =~ "master" ]]
 then
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${BUILDS_FOLDER}/current/" --overwrite;
 fi
