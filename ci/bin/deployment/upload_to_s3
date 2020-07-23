@@ -30,7 +30,7 @@ then
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${BUILDS_FOLDER}/current/" --overwrite;
 fi
 
-if [[ "$DEPLOY_RELEASE" == "true" ]]
+if [ -z "$DEPLOY_RELEASE" ]
 then
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/${RELEASE_VERSION}/" --overwrite
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/stable/" --overwrite
