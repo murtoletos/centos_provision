@@ -7,6 +7,4 @@ mkdir -p "${LOCAL_BUILD_PATH}/${ANSIBLE_FOLDER}"
 
 cp scripts/*.sh "${LOCAL_BUILD_PATH}"
 
-cp playbook.yml install-roles.yml ansible.cfg "${LOCAL_BUILD_PATH}/${ANSIBLE_FOLDER}"
-
-zip -r "${LOCAL_BUILD_PATH}/${ANSIBLE_FOLDER}/playbook.zip" roles **/*.yml *.cfg *.txt
+zip -r "${LOCAL_BUILD_PATH}/${ANSIBLE_FOLDER}/playbook.zip" playbook.yml install-roles.yml ansible.cfg roles **/*.yml *.cfg *.txt
