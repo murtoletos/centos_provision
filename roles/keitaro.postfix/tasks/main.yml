@@ -22,9 +22,6 @@
 - set_fact:
     hostname_check: "{{ hostname_output | regex_search('^[0-9]+$') }}"
 
-- debug:
-    msg: "{{ hostname_check }}"
-    
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
   when: hostname_check != ''
