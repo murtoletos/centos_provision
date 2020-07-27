@@ -3,7 +3,7 @@ set -e -x -o pipefail
 
 rm -rf "${LOCAL_BUILD_PATH}"
 
-mkdir -p "${LOCAL_BUILD_PATH}/${ANSIBLE_FOLDER}"
+mkdir -p "${LOCAL_BUILD_PATH}"
 
 cp scripts/*.sh "${LOCAL_BUILD_PATH}"
 
