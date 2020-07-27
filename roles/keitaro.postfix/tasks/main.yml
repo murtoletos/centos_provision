@@ -29,7 +29,8 @@
 - debug:
     msg: "{{ hostname_only_digits }}"
     
-- meta: end_play    
+- fail:
+    msg: --------------------end----------------------------
 
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
