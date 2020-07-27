@@ -19,22 +19,15 @@
   set_fact:
     hostname_output: "{{ lookup('file', '/etc/hostname') }}"
 
-- name: Check if hostname contains only numbers
-  shell: "[[ {{ hostname_output }} =~ [^[:digit:]] ]] || echo true"
-  register: hostname_only_digits
-
 - set_fact:
-    hostname_only_digits: "{{ hostname_output | regex_search('^[0-9]+$') }}"
+    hostname_check: "{{ hostname_output | regex_search('^[0-9]+$') }}"
 
 - debug:
     msg: "{{ hostname_only_digits }}"
     
-- fail:
-    msg: --------------------end----------------------------
-
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
-  when: hostname_only_digits.stdout == 'true'
+  when: hostname_check == ''
 
 - name: Ensure postfix is started and enabled at boot.
   service:
