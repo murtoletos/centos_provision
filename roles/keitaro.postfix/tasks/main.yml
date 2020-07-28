@@ -15,12 +15,8 @@
       value: ipv4
   notify: restart postfix
 
-- name: Set hostname to variable
-  set_fact:
-    hostname_output: "{{ lookup('file', '/etc/hostname') }}"
-
 - set_fact:
-    hostname_check: "{{ hostname_output | regex_search('^[0-9]+$') }}"
+    hostname_check: "{{ ansible_hostname | regex_search('^[0-9]+$') }}"
 
 - name: Change hostname if contain only digits
   shell: "hostname {{ hostname_output }}a"
