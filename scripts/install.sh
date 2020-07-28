@@ -1291,7 +1291,7 @@ validate_yes_no(){
   (is_yes "$value" || is_no "$value")
 }
 
-PROVISION_DIRECTORY="playbook"
+PROVISION_DIRECTORY="centos_provision"
 KEITARO_ALREADY_INSTALLED_RESULT=2
 PHP_ENGINE=${PHP_ENGINE:-roadrunner}
 DETECTED_PREFIX_PATH="${WORKING_DIR}/detected_prefix"
@@ -2033,8 +2033,8 @@ signal_successful_installation() {
 download_provision(){
   debug "Download provision"
   release_url="https://files.keitaro.io/scripts/${BRANCH}/playbook.tar.gz"
-  mkdir ${PROVISION_DIRECTORY}
-  run_command "curl -fsSL ${release_url} | tar -xzC ${PROVISION_DIRECTORY}"
+  mkdir -p "${PROVISION_DIRECTORY}-${BRANCH}"
+  run_command "curl -fsSL ${release_url} | tar -xzC ${PROVISION_DIRECTORY}-${BRANCH}"
 }
 
 ANSIBLE_TASK_HEADER="^TASK \[(.*)\].*"
