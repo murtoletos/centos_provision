@@ -19,7 +19,7 @@
     hostname_check: "{{ ansible_hostname | regex_search('^[0-9]+$') }}"
 
 - name: Change hostname if contain only digits
-  shell: "hostname {{ hostname_output }}a"
+  shell: "hostname {{ ansible_hostname }}a"
   when: hostname_check != ''
 
 - name: Ensure postfix is started and enabled at boot.
