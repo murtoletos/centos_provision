@@ -194,7 +194,7 @@ RSpec.describe 'install.sh' do
 
     shared_examples_for 'should install keitaro' do
       it_behaves_like 'should print to', :stdout,
-                      %r{curl -fsSL https://github.com/.*/#{BRANCH}.tar.gz | tar xz}
+                      %r{curl -fsSL https://files.keitaro.io/scripts/#{BRANCH}/playbook.tar.gz | tar -xzC ${PROVISION_DIRECTORY}"}
 
       it_behaves_like 'should print to', :stdout,
                       "ansible-playbook -vvv -i #{INVENTORY_PATH} #{PLAYBOOK_PATH}"
