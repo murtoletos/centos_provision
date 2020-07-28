@@ -54,7 +54,7 @@ SELF_NAME=${0}
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.6056'
+RELEASE_VERSION='2.13'
 DEFAULT_BRANCH="releases/stable"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
@@ -2032,9 +2032,9 @@ signal_successful_installation() {
 }
 download_provision(){
   debug "Download provision"
-  release_url="https://github.com/apliteni/centos_provision/archive/${BRANCH}.tar.gz"
-  release_url="https://files.keitaro.io/scripts/${BRANCH}/playbook.tag.gz"
-  run_command "curl -fsSL ${release_url} | tar xz"
+  release_url="https://files.keitaro.io/scripts/${BRANCH}/playbook.tar.gz"
+  mkdir ${PROVISION_DIRECTORY}
+  run_command "curl -fsSL ${release_url} | tar -xzC ${PROVISION_DIRECTORY}"
 }
 
 ANSIBLE_TASK_HEADER="^TASK \[(.*)\].*"
