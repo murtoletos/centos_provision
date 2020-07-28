@@ -7,4 +7,4 @@ mkdir -p "${LOCAL_BUILD_PATH}"
 
 cp scripts/*.sh "${LOCAL_BUILD_PATH}"
 
-zip -r "${LOCAL_BUILD_PATH}/playbook.zip" playbook.yml ansible.cfg roles vars
+tar -zcvf "${LOCAL_BUILD_PATH}/playbook.tar.gz" playbook.yml ansible.cfg roles vars
