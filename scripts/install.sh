@@ -54,8 +54,8 @@ SELF_NAME=${0}
 
 KEITARO_URL="https://keitaro.io"
 
-RELEASE_VERSION='2.13'
-DEFAULT_BRANCH="current"
+RELEASE_VERSION='2.6056'
+DEFAULT_BRANCH="releases/stable"
 BRANCH="${BRANCH:-${DEFAULT_BRANCH}}"
 
 if is_ci_mode && is_pipe_mode; then
@@ -1291,7 +1291,7 @@ validate_yes_no(){
   (is_yes "$value" || is_no "$value")
 }
 
-PROVISION_DIRECTORY="centos_provision-${BRANCH}"
+PROVISION_DIRECTORY="playbook"
 KEITARO_ALREADY_INSTALLED_RESULT=2
 PHP_ENGINE=${PHP_ENGINE:-roadrunner}
 DETECTED_PREFIX_PATH="${WORKING_DIR}/detected_prefix"
@@ -2033,6 +2033,7 @@ signal_successful_installation() {
 download_provision(){
   debug "Download provision"
   release_url="https://github.com/apliteni/centos_provision/archive/${BRANCH}.tar.gz"
+  release_url="https://files.keitaro.io/scripts/${BRANCH}/playbook.tag.gz"
   run_command "curl -fsSL ${release_url} | tar xz"
 }
 
