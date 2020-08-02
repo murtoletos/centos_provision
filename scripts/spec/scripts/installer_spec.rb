@@ -5,8 +5,8 @@ RSpec.describe 'install.sh' do
   include_context 'build subject'
 
   BRANCH='releases/stable'
-  PLAYBOOK_PATH="centos_provision-#{BRANCH}/playbook.yml"
-  PROVISION_DIRECTORY="centos_provision-#{BRANCH}"
+  PLAYBOOK_PATH="centos_provision/playbook.yml"
+  PROVISION_DIRECTORY="centos_provision"
   INVENTORY_PATH='./.keitaro/etc/keitaro/config/inventory'
 
   let(:stored_values) { {} }
