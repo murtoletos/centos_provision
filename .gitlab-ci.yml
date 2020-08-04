@@ -7,12 +7,14 @@ variables:
   GIT_URL: "git@gitlab.x.apli.tech:apliteni/keitaro/installer.git"
   LOCAL_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_REF_NAME}"
   REMOTE_BUILD_PATH: "${BUILDS_FOLDER}/${CI_COMMIT_REF_NAME}"
+  BUILDS_TTL: 7d
 
 # Stages
 stages:
   - build
   - quality_checks
   - deployment
+  - actions
 
 # Build jobs
 build_scripts:
@@ -20,32 +22,21 @@ build_scripts:
   stage: build
   interruptible: true
   script:
-    - ci/bin/build/compile
+    - ci/bin/build/build_scripts
     - ci/bin/testing/validate_scripts
   artifacts:
     expire_in: 1 hour
     paths:
-      - scripts/install.sh
-      - scripts/add-site.sh
-      - scripts/enable-ssl.sh
-      - scripts/fix-renewal-certs-cron-job.sh
-      - scripts/test-run-command.sh
+      - scripts/*.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - when: always
 
 # Quality checks
-.quality-checks-common:
+run_rspec:
   stage: quality_checks
   interruptible: true
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - when: always
-
-run_rspec:
-  extends: [.quality-checks-common]
   tags: [ruby]
   script:
     - ci/bin/testing/validate_scripts
@@ -97,3 +88,15 @@ deploy:
     - if: '$ACTION == "build"'
       when: always
     - when: never
+
+# Actions
+prune_files:
+  stage: actions
+  tags: [docker]
+  image: apliteni/mc
+  allow_failure: false
+  script:
+    - "ci/bin/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
+  only:
+    variables:
+      - $ACTION == 'prune'
