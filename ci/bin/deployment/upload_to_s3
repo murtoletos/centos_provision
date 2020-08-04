@@ -34,5 +34,3 @@ then
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/${RELEASE_VERSION}/" --overwrite
       mc mirror "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/stable/" --overwrite
 fi
-
-
