@@ -28,7 +28,11 @@ build_scripts:
   artifacts:
     expire_in: 1 hour
     paths:
-      - scripts/*.sh
+      - scripts/install.sh
+      - scripts/add-site.sh
+      - scripts/enable-ssl.sh
+      - scripts/fix-renewal-certs-cron-job.sh
+      - scripts/test-run-command.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
