@@ -15,7 +15,6 @@ fi
 
 
 root_dir="."
-mkdir -p "$root_dir/scripts"
 scriptsDir="$root_dir/scripts"
 echo "Set current release to $RELEASE_VERSION"
 sed -i "s/^RELEASE_VERSION=.*/RELEASE_VERSION='$RELEASE_VERSION'/g" "$scriptsDir/src/shared/vars/common.sh"
