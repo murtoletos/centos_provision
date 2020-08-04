@@ -29,6 +29,10 @@ build_scripts:
     expire_in: 1 hour
     paths:
       - scripts/*.sh
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - when: always
 
 # Quality checks
 run_rspec:
