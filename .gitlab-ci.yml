@@ -23,16 +23,12 @@ build_scripts:
   stage: build
   interruptible: true
   script:
-    - ci/bin/build/build_scripts
+    - ci/bin/build/compile
     - ci/bin/testing/validate_scripts
   artifacts:
     expire_in: 1 hour
     paths:
-      - scripts/install.sh
-      - scripts/add-site.sh
-      - scripts/enable-ssl.sh
-      - scripts/fix-renewal-certs-cron-job.sh
-      - scripts/test-run-command.sh
+      - scripts/*.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
