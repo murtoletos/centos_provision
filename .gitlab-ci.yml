@@ -23,7 +23,7 @@ build_scripts:
   stage: build
   interruptible: true
   script:
-    - ci/bin/build/build_scripts
+    - ci/bin/build/compile
     - ci/bin/testing/validate_scripts
   artifacts:
     expire_in: 1 hour
