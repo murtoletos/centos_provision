@@ -32,8 +32,6 @@ build_scripts:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
-      when: never  
     - when: always
 
 # Quality checks
