@@ -6,5 +6,6 @@ stage3(){
   setup_vars
   if isset "$RECONFIGURE"; then
     upgrade_packages
+    init_kctl
   fi
 }

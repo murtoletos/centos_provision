@@ -6,5 +6,4 @@ stage1(){
   check_thp_disable_possibility
   parse_options "$@"
   set_ui_lang
-  create_kctl_dirs_and_links
 }

@@ -1490,7 +1490,6 @@ stage1(){
   check_thp_disable_possibility
   parse_options "$@"
   set_ui_lang
-  create_kctl_dirs_and_links
 }
 #
 
@@ -1821,6 +1820,7 @@ stage3(){
   setup_vars
   if isset "$RECONFIGURE"; then
     upgrade_packages
+    init_kctl
   fi
 }
 
