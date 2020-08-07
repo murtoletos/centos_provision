@@ -20,7 +20,7 @@
     - {role: 'keitaro.prepare', tags: 'prepare, upgrade'}
     - {role: 'geerlingguy.firewall', tags: 'firewall', when: "skip_firewall is not defined or skip_firewall != 'yes'"}
     - {role: 'resmo.ntp', tags: 'ntp'}
-    - {role: 'mrlesmithjr.timezone'}
+    - {role: 'mrlesmithjr.timezone', tags: 'timezone'}
     - {role: 'geerlingguy.repo-remi', tags: 'repo-remi'}
     - {role: 'keitaro.systemd', tags: 'systemd, upgrade'}
     - {role: 'keitaro.disable_thp', tags: 'mariadb, tokudb, redis, upgrade'}
