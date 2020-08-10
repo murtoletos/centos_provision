@@ -1,15 +1,11 @@
 ---
 - set_fact:
     user_timezone: "{{ timezone }}"
-  when: 
-    - language is defined
-    - language != 'en'
+  when: language != 'en'
    
 - set_fact:
     user_timezone: "{{ timezone_utc }}"
-  when:
-    - language is defined
-    - language == 'en'    
+  when: language == 'en'    
   
 - name: configuring /etc/localtime
   file: src=/usr/share/zoneinfo/{{ user_timezone }} dest=/etc/localtime state=link force=yes
