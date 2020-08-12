@@ -31,7 +31,6 @@ build_scripts:
       - scripts/install.sh
       - scripts/add-site.sh
       - scripts/enable-ssl.sh
-      - scripts/delete-ssl.sh
       - scripts/test-run-command.sh
   rules:
     - if: $CI_MERGE_REQUEST_ID
