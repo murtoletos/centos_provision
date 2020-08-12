@@ -128,7 +128,7 @@ deploy_branch:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: '$CI_COMMIT_REF_NAME =~/(INST-)/'
-      when: manual
+      when: on_success
     - when: never
 
 prune_files:
