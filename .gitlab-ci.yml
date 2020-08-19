@@ -115,8 +115,9 @@ deploy_branch:
   extends: [.deployment-jobs-common]
   tags: [kubernetes]
   image: apliteni/mc
+  variables:
+    TEST: "test message"
   script:
-    - TEST='yes'
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
     - ci/bin/deployment/upload_to_s3
