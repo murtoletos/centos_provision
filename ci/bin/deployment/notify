@@ -9,7 +9,7 @@ fi
 
 s3_url="https://${S3_HOST}/${S3_BUCKET}/${REMOTE_BUILD_PATH}"
 
-text="Installer build v${RELEASE_VERSION} (${CI_COMMIT_SHORT_SHA}) is ready!
+text="Installer build v${RELEASE_VERSION} (${CI_COMMIT_SHORT_SHA}) is ready! (test message)
 ${s3_url}/install.sh
 ${s3_url}/enable-ssl.sh
 и другие файлы"
