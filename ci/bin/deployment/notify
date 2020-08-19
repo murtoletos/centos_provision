@@ -19,12 +19,6 @@ then
       text="Installer merged with $CI_COMMIT_REF_NAME branch"
 fi
 
-if [ -z "$DEPLOY_RELEASE" ]
-then
-      s3_url="https://${S3_HOST}/${S3_BUCKET}/${RELEASE_FOLDER}/stable";
-      text="Installer v${RELEASE_VERSION} deployed successfully"   
-fi
-
 text="$text
 ${s3_url}/install.sh
 ${s3_url}/enable-ssl.sh
