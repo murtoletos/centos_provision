@@ -25,12 +25,6 @@ then
       text="Installer v${RELEASE_VERSION} deployed successfully"   
 fi
 
-if [[ "$TEST" == 'test' ]]
-then
-      s3_url="https://${S3_HOST}/${S3_BUCKET}/${RELEASE_FOLDER}/stable";
-      text="test message"   
-fi
-
 text="$text
 ${s3_url}/install.sh
 ${s3_url}/enable-ssl.sh
