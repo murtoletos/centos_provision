@@ -116,6 +116,7 @@ deploy_branch:
   tags: [kubernetes]
   image: apliteni/mc
   script:
+    - DEPLOY_RELEASE='no'
     - ci/bin/deployment/create_build
     - ci/bin/deployment/prepare_mc
     - ci/bin/deployment/upload_to_s3

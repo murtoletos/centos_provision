@@ -19,7 +19,7 @@ then
       text="Installer merged with $CI_COMMIT_REF_NAME branch"
 fi
 
-if [[ "$DEPLOY_RELEASE" == 'yes' ]]
+if [[ "$DEPLOY_RELEASE" == 'no' ]]
 then
       s3_url="https://${S3_HOST}/${S3_BUCKET}/${RELEASE_FOLDER}/stable";
       text="Installer v${RELEASE_VERSION} deployed successfully"   
