@@ -28,6 +28,6 @@ fi
 text="$text
 ${s3_url}/install.sh
 ${s3_url}/enable-ssl.sh
-и другие файлы"
+и другие файлы ${TEST}"
 
 curl "${SLACK_WEBHOOK}" -X POST --data "{\"text\": \"${text}\"}" -H 'Content-type: application/json'
