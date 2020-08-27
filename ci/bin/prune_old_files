@@ -4,5 +4,6 @@ set -e -x -o pipefail
 mc rm \
     --recursive \
     --force \
+    --fake \
     --older-than ${2} \
     default/${1}
