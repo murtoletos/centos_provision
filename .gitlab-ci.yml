@@ -35,6 +35,8 @@ build_scripts:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: '$ACTION == "prune"'
+      when: never
     - when: always
 
 # Quality checks
@@ -48,6 +50,9 @@ run_rspec:
     - ci/bin/testing/run_rspec
   dependencies:
     - build_scripts
+  rules:
+    - if: '$ACTION == "prune"'
+      when: never
 
 
 # Deployment jobs
@@ -67,6 +72,8 @@ legacy_deploy:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: manual
+    - if: '$ACTION == "prune"'
+      when: never
     - when: never
 
 
@@ -89,6 +96,8 @@ deploy:
       when: on_success
     - if: '$ACTION == "build"'
       when: always
+    - if: '$ACTION == "prune"'
+      when: never  
     - when: never
 
 deploy_release:
@@ -110,6 +119,8 @@ deploy_release:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: manual
+    - if: '$ACTION == "prune"'
+      when: never  
     - when: never
 
 deploy_branch:
@@ -129,6 +140,8 @@ deploy_branch:
       when: never
     - if: '$CI_COMMIT_REF_NAME =~/(INST-)/'
       when: on_success
+    - if: '$ACTION == "prune"'
+      when: never  
     - when: never
 
 prune_files:
