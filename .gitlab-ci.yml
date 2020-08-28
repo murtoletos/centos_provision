@@ -150,7 +150,7 @@ prune_files:
   image: apliteni/mc
   allow_failure: false
   script:
-    - "ci/bin/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER} ${BUILDS_TTL}"
+    - "ci/bin/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER}/ ${BUILDS_TTL}"
   only:
     variables:
       - $ACTION == 'prune'
