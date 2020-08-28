@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e -x -o pipefail
 
-mc find default/${1} --older ${2} --exec "mc rm {}"
+mc find default/${1} --older-than ${2} --exec "mc rm {}"
