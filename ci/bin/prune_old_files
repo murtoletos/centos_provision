@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e -x -o pipefail
 
-mc rm --recursive --force --older-than ${2} default/${1}
+mc rm -r --force --older-than ${2} default/${1}
