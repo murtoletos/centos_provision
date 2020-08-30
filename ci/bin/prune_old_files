@@ -1,4 +1,22 @@
 #!/usr/bin/env bash
 set -e -x -o pipefail
 
+if [ -z "$S3_BUCKET" ]
+then
+      echo "\$S3_BUCKET is empty";
+      exit 1;
+fi
+
+if [ -z "$BUILDS_FOLDER" ]
+then
+      echo "\$BUILDS_FOLDER is empty";
+      exit 1;
+fi
+
+if [ -z "$BUILDS_TTL" ]
+then
+      echo "\$BUILDS_TTL is empty";
+      exit 1;
+fi
+
 mc rm -r --force --older-than ${2} default/${1}
