@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e -x -o pipefail
+
+if [ -z "$GIT_URL" ]
+then
+      echo "\$GIT_URL is empty";
+      exit 1;
+fi
+
+curl -s -XGET "https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags?format=json" | jq
