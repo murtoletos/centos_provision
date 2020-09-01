@@ -144,7 +144,7 @@ prune_files:
 
 upload_releases:
   before_script:
-    - yum install -y jq
+    - apt-get install -y jq
   extends: [.deployment-jobs-common]
   tags: [docker]
   image: apliteni/mc
