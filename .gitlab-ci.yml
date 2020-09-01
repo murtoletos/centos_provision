@@ -143,8 +143,6 @@ prune_files:
       - $ACTION == 'prune'
 
 upload_releases:
-  before_script:
-    - yum install -y jq
   extends: [.deployment-jobs-common]
   tags: [docker]
   image: apliteni/mc
