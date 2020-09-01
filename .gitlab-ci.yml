@@ -141,3 +141,17 @@ prune_files:
   only:
     variables:
       - $ACTION == 'prune'
+
+upload_releases:
+  tags: [docker]
+  image: apliteni/mc
+  allow_failure: false
+  script:
+    - ci/bin/deployment/create_build
+    - ci/bin/upload_releases_to_s3
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "INST-206"'
+      when: on_success
+    - when: never
