@@ -143,6 +143,7 @@ prune_files:
       - $ACTION == 'prune'
 
 upload_releases:
+  extends: [.deployment-jobs-common]
   tags: [docker]
   image: apliteni/mc
   allow_failure: false
