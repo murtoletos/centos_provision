@@ -31,7 +31,7 @@ for row in $(curl -H "Content-Type: application/json" \
 https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq '.[] | .name'); do
    
     ##echo$(${row})
-    tag=$(echo "${row//.}")
+    tag=$(echo "${row//"}")
     rm -rf "${LOCAL_BUILD_PATH}"
 
     mkdir -p "${LOCAL_BUILD_PATH}"
