@@ -147,8 +147,6 @@ upload_releases:
   tags: [docker]
   image: apliteni/mc
   allow_failure: false
-  before_script:
-    - docker info
   script:
     - ci/bin/upload_releases_to_s3
   rules:
