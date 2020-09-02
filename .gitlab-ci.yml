@@ -144,9 +144,11 @@ prune_files:
 
 upload_releases:
   extends: [.deployment-jobs-common]
-  tags: [docker]
+  tags: [shell]
   image: apliteni/mc
   allow_failure: false
+  before_script:
+    - yum install -y jq
   script:
     - ci/bin/upload_releases_to_s3
   rules:
