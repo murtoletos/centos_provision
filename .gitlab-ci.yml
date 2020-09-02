@@ -148,7 +148,7 @@ upload_releases:
   image: apliteni/mc
   allow_failure: false
   before_script:
-    - yum install -y jq
+    - sudo yum install -y jq
   script:
     - ci/bin/upload_releases_to_s3
   rules:
