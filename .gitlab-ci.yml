@@ -148,7 +148,6 @@ upload_releases:
   image: apliteni/mc
   allow_failure: false
   script:
-    - apt-get install -y jq
     - ci/bin/upload_releases_to_s3
   rules:
     - if: $CI_MERGE_REQUEST_ID

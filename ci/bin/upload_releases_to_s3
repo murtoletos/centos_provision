@@ -30,6 +30,8 @@ for row in $(curl -H "Content-Type: application/json" \
 -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
 https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq -r '.[] | .name'); do
    
+   docker info
+   
     rm -rf "${LOCAL_BUILD_PATH}"
 
     mkdir -p "${LOCAL_BUILD_PATH}"
