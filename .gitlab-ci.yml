@@ -147,9 +147,8 @@ upload_releases:
   tags: [docker]
   image: apliteni/mc
   allow_failure: false
-  services:
-    - jq
   script:
+    - apt-get install -y jq
     - ci/bin/upload_releases_to_s3
   rules:
     - if: $CI_MERGE_REQUEST_ID
