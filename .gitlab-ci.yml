@@ -144,7 +144,7 @@ prune_files:
 
 upload_releases:
   extends: [.deployment-jobs-common]
-  tags: [shell, docker]
+  tags: [docker]
   image: apliteni/mc
   allow_failure: false
   script:
