@@ -31,13 +31,13 @@ for row in $(curl -H "Content-Type: application/json" \
 https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq '.[] | .name'); do
    
     ##echo$(${row})
-    
+    tag=$(echo ${row})
     rm -rf "${LOCAL_BUILD_PATH}"
 
     mkdir -p "${LOCAL_BUILD_PATH}"
     
     curl -s -H "Content-Type: application/json" -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
-    "https://gitlab.x.apli.tech/api/v4/projects/54/repository/archive.tar.gz?sha=${row}" | tar -xzC ${LOCAL_BUILD_PATH} --strip-components 1
+    "https://gitlab.x.apli.tech/api/v4/projects/54/repository/archive.tar.gz?sha=${tag}" | tar -xzC ${LOCAL_BUILD_PATH} --strip-components 1
     
     cp scripts/{install,add-site,enable-ssl,delete-ssl}.sh "${LOCAL_BUILD_PATH}"
     
