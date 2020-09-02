@@ -25,6 +25,7 @@ then
       exit 1;
 fi
 
+yum install -y jq
 
 for row in $(curl -H "Content-Type: application/json" \
 -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
