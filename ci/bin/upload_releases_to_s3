@@ -28,7 +28,7 @@ fi
 
 for row in $(curl -H "Content-Type: application/json" \
 -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
-https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq '.[] | .name'); do
+https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq -r '.[] | .name'); do
    
     rm -rf "${LOCAL_BUILD_PATH}"
 
