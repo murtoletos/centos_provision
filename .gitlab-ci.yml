@@ -35,7 +35,7 @@ build_scripts:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never
     - when: always
 
@@ -53,7 +53,7 @@ run_rspec:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never
     - when: on_success
 
@@ -73,7 +73,7 @@ legacy_deploy:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never  
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: manual
@@ -95,7 +95,7 @@ deploy:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: on_success
@@ -120,7 +120,7 @@ deploy_release:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never
     - if: '$CI_COMMIT_REF_NAME =~ /(master)/'
       when: manual
@@ -141,7 +141,7 @@ deploy_branch:
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: '$ACTION == "prune"'
+    - if: '$ACTION == "prune_old"'
       when: never
     - if: '$CI_COMMIT_REF_NAME =~/(INST-)/'
       when: on_success
@@ -157,4 +157,4 @@ prune_files:
     - "ci/bin/prune_old_files ${S3_BUCKET}/${BUILDS_FOLDER}/ ${BUILDS_TTL}"
   only:
     variables:
-      - $ACTION == 'prune'
+      - $ACTION == 'prune_old'
