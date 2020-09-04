@@ -3,13 +3,13 @@ set -e -x -o pipefail
 
 if [ -z "$1" ]
   then
-    echo "\build path is empty";
+    echo "build path is empty";
     exit 1;
 fi
 
 if [ -z "$2" ]
   then
-    echo "\ttl is empty";
+    echo "ttl is empty";
     exit 1;
 fi
 
