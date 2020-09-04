@@ -150,6 +150,7 @@ upload_releases:
   before_script:
     - apk --update add wget jq
   script:
+    - ci/bin/deployment/prepare_mc
     - ci/bin/upload_releases_to_s3
   rules:
     - if: $CI_MERGE_REQUEST_ID

@@ -7,23 +7,6 @@ then
       exit 1;
 fi
 
-if [ -z "$S3_SECRET" ]
-then
-      echo "\$S3_SECRET is empty";
-      exit 1;
-fi
-
-if [ -z "$S3_BUCKET" ]
-then
-      echo "\$S3_BUCKET is empty";
-      exit 1;
-fi
-
-if [ -z "$S3_HOST" ]
-then
-      echo "\$S3_HOST is empty";
-      exit 1;
-fi
 
 for row in $(curl -H "Content-Type: application/json" \
 -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
@@ -35,11 +18,12 @@ https://gitlab.x.apli.tech/api/v4/projects/54/repository/tags | jq -r '.[] | .na
     curl -s -H "Content-Type: application/json" -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" \
     "https://gitlab.x.apli.tech/api/v4/projects/54/repository/archive.tar.gz?sha=${row}" | tar -xzC ${LOCAL_BUILD_PATH} --strip-components 1
     
+    #убрать v. из названия тега
+    #удалять все лишние файлы, кроме нужных
+    
     cp scripts/{install,add-site,enable-ssl,delete-ssl}.sh "${LOCAL_BUILD_PATH}"
     
     tar -zcvf "${LOCAL_BUILD_PATH}/playbook.tar.gz" playbook.yml ansible.cfg roles vars
-    
-    mc config host add default https://${S3_HOST} ${S3_KEY} ${S3_SECRET}
     
     mc cp --recursive "${LOCAL_BUILD_PATH}" "default/${S3_BUCKET}/${RELEASE_FOLDER}/${row}/";
 done
